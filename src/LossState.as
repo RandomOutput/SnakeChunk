@@ -13,7 +13,7 @@ package
 		override public function create():void
 		{
 			var text:FlxText = new FlxText(200, 200, 500, "YOU JUST LOST THE GAME");
-			text.setFormat(null, 24);
+			text.setFormat(null, 24, 0xff000000);
 			add(text);
 		}
 	}

@@ -3,7 +3,7 @@ package
 	import org.flixel.FlxG;
 	import org.flixel.FlxGame;
 
-	[SWF(width="700", height="600", backgroundColor="#000000")] 
+	[SWF(width="700", height="600", backgroundColor=0xFFFFFF)] 
 
 	public class Main extends FlxGame
 	{

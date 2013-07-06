@@ -1,7 +1,9 @@
+//chunk_pink.png 62x62
+
 package
 {
 	import flash.geom.Point;
-	
+	import PlayState;
 	import org.flixel.FlxG;
 	import org.flixel.FlxPoint;
 	import org.flixel.FlxSprite;
@@ -12,12 +14,15 @@ package
 		public static const PLAYER:int = 1;
 		public static const BODY:int = 2;
 		public static const RANDOM:int = 3;
+		public static const INVADER:int = 4;
+
+		private const PINK_SIZE:int = 41;
 		
 		private static var s_nextID:int = 0;
 		public static var ZERO:FlxPoint = new FlxPoint();
 		
-		public static const WIDTH:int = 25
-		public static const HEIGHT:int = 25;
+		public static const WIDTH:int = 30
+		public static const HEIGHT:int = 30;
 		
 		private var m_mode:int;
 		private var m_type:int;
@@ -25,6 +30,10 @@ package
 		private var m_ahead:SnakeChunk;
 		private var m_behind:SnakeChunk;
 		private var m_resetTime:uint;
+		//for behavior
+		private var m_dropTime:uint = 0;
+		private var xSwap:int = 1;
+		private var ySwap:int = 1;
 		
 		public var lastY:Number;
 		public var lastX:Number;
@@ -42,7 +51,9 @@ package
 			super(X, Y, null);
 			lastX = X;
 			lastY = Y;
-			makeGraphic(25, 25);
+
+			loadGraphic(pinkChunkImage, false, false, PINK_SIZE, PINK_SIZE);
+
 			m_mode = mode;
 			if(m_mode != BODY)
 			{
@@ -102,8 +113,8 @@ package
 						var distance:Number = Math.max(FlxU.getDistance(new FlxPoint(x, y), new FlxPoint(m_ahead.lastX, m_ahead.lastY)), Number.MIN_VALUE);
 						newVelocity = new FlxPoint((m_ahead.lastX - x) / distance, (m_ahead.lastY - y) / distance);
 						dot = newVelocity.x * m_ahead.lastVelocity.x + newVelocity.y * m_ahead.lastVelocity.y;
-						velocity.x = newVelocity.x * dot * .3 + velocity.x * .7 + (newVelocity.x * (distance - 30));
-						velocity.y = newVelocity.y * dot * .3 + velocity.y * .7 + (newVelocity.y * (distance - 30));
+						velocity.x = newVelocity.x * dot * .3 + velocity.x * .7 + (newVelocity.x * (distance - PlayState.SPACER_VAL));
+						velocity.y = newVelocity.y * dot * .3 + velocity.y * .7 + (newVelocity.y * (distance - PlayState.SPACER_VAL));
 						
 						
 						
@@ -118,6 +129,28 @@ package
 						velocity.x =  (velocity.x / distance) * 100;
 						velocity.y = (velocity.y / distance)  * 100;
 						m_resetTime = FlxU.getTicks() + Math.random() * 3000;
+					}
+					break;
+				case INVADER:
+					if(FlxU.getTicks() > m_dropTime)
+					{
+						velocity.x = xSwap * 200;
+						velocity.y = 0;
+
+						if(x > 700 - WIDTH || x < 0)
+						{
+							xSwap *= -1;
+							m_dropTime = FlxU.getTicks() + Math.max(Math.random() * 1500, 250);
+						} 
+					} 
+					else
+					{
+						velocity.y = ySwap * 100;
+						velocity.x = 0;
+						if(y > 600 - HEIGHT || y < 0)
+						{
+							ySwap *= -1;
+						}
 					}
 					break;
 			}
@@ -157,6 +190,24 @@ package
 		public function setBreakType(type:int = RANDOM):void
 		{
 			m_type = type;
+
+			trace("MODE: " + type);
+			
+			switch(type)
+			{
+				case 3:
+					loadGraphic(dotChunkImage, false, false, PINK_SIZE, PINK_SIZE);
+					break;	
+				case 4: 
+					loadGraphic(pinkChunkImage, false, false, PINK_SIZE, PINK_SIZE);
+					break;
+				case 5: 
+					loadGraphic(purpleChunkImage, false, false, PINK_SIZE, PINK_SIZE);
+					break;
+				default:
+					makeGraphic(25, 25, 0xffff0000); 
+				break;
+			}
 		}
 		
 		public function get mode():int
@@ -256,5 +307,15 @@ package
 				m_ahead = null;
 			}
 		}
+
+		//*** Assets ***
+		[Embed(source="/images/chunk_pink.png")]
+		private static var pinkChunkImage:Class;
+
+		[Embed(source="/images/chunk_purple.png")]
+		private static var purpleChunkImage:Class;
+
+		[Embed(source="/images/chunk_dot.png")]
+		private static var dotChunkImage:Class;
 	}
 }

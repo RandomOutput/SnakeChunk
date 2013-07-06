@@ -14,7 +14,7 @@ package
 			super();
 			m_timeLimit = FlxU.getTicks() + time * 1000;
 			m_timer = new FlxText(X, Y, 500, FlxU.formatTime(time, false));
-			m_timer.setFormat(null, 24);
+			m_timer.setFormat(null, 24, 0xff000000);
 			isComplete = false;
 			add(m_timer);
 		}
