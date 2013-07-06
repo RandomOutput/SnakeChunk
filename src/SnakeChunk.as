@@ -75,11 +75,11 @@ package
 					var newVelocity:FlxPoint = new FlxPoint();
 					if(FlxG.keys.UP && !FlxG.keys.DOWN)
 					{
-						newVelocity.y = Math.max(velocity.y - 5, -100);
+						newVelocity.y = Math.max(velocity.y - 5, -1 * PlayState.SPEED);
 					}
 					else if(!FlxG.keys.UP && FlxG.keys.DOWN)
 					{
-						newVelocity.y = Math.max(velocity.x + 5, 100);
+						newVelocity.y = Math.max(velocity.x + 5, PlayState.SPEED);
 					}
 					else
 					{
@@ -87,11 +87,11 @@ package
 					}
 					if(FlxG.keys.LEFT && !FlxG.keys.RIGHT)
 					{	
-						newVelocity.x = Math.max(velocity.x - 5, -100);
+						newVelocity.x = Math.max(velocity.x - 5, -1 * PlayState.SPEED);
 					}
 					else if(!FlxG.keys.LEFT && FlxG.keys.RIGHT)
 					{
-						newVelocity.x = Math.min(velocity.x + 5, 100);
+						newVelocity.x = Math.min(velocity.x + 5, PlayState.SPEED);
 					}
 					else
 					{
@@ -105,7 +105,10 @@ package
 					//var distance2:Number = Math.max(FlxU.getDistance(ZERO, p), Number.MIN_VALUE);
 					var dot:Number =1; //newVelocity.x / distance * p.x / distance + newVelocity.y /distance * p.y / distance;
 					velocity.x = newVelocity.x * dot;
-					velocity.y = newVelocity.y * dot; 
+					velocity.y = newVelocity.y * dot;
+
+					//velocity.x *= PlayState.SPEED_MULT;
+					//velocity.y *= PlayState.SPEED_MULT; 
 					break;
 				case BODY:
 					if(m_ahead != null)
@@ -151,6 +154,17 @@ package
 						{
 							ySwap *= -1;
 						}
+					}
+					break;
+				default:
+					if(FlxU.getTicks() > m_resetTime)
+					{
+						velocity.x = Math.random() - .5;
+						velocity.y = Math.random() - .5;
+						distance = Math.max(FlxU.getDistance(ZERO, velocity), Number.MIN_VALUE);
+						velocity.x =  (velocity.x / distance) * 100;
+						velocity.y = (velocity.y / distance)  * 100;
+						m_resetTime = FlxU.getTicks() + Math.random() * 3000;
 					}
 					break;
 			}

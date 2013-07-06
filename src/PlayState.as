@@ -13,10 +13,10 @@ package
 	
 	public class PlayState extends FlxState
 	{	
-		public static const START_COUNT:int = 10;
-		public static const SPACER_VAL:int = 50;
-		public static const COL_DIST:int = 20;
-		public static const SPEED_MULT:Number = .8;
+		public static const START_COUNT:int = 30;
+		public static const SPACER_VAL:int = 30;
+		public static const COL_DIST:int = 15;
+		public static const SPEED:Number = 75;
 
 		private var m_background:FlxSprite;
 		private var m_chunks:FlxGroup;
@@ -48,7 +48,7 @@ package
 			for(var i:int = 0; i < START_COUNT; ++i)
 			{
 				var next:SnakeChunk = new SnakeChunk(550 - ((i + 1) * 35), 300, SnakeChunk.BODY);
-				var nextType:int = Math.floor(Math.random() * 2) + 3;
+				var nextType:int = Math.floor(Math.random() * 3) + 3;
 				trace("type: " + nextType);
 				next.setBreakType(nextType);
 				next.ahead = head;
