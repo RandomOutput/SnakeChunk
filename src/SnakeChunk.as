@@ -210,7 +210,7 @@ package
 			switch(type)
 			{
 				case 3:
-					loadGraphic(dotChunkImage, false, false, PINK_SIZE, PINK_SIZE);
+					loadGraphic(redChunkImage, false, false, PINK_SIZE, PINK_SIZE);
 					break;	
 				case 4: 
 					loadGraphic(pinkChunkImage, false, false, PINK_SIZE, PINK_SIZE);
@@ -329,7 +329,7 @@ package
 		[Embed(source="/images/chunk_purple.png")]
 		private static var purpleChunkImage:Class;
 
-		[Embed(source="/images/chunk_dot.png")]
-		private static var dotChunkImage:Class;
+		[Embed(source="/images/chunk_red.png")]
+		private static var redChunkImage:Class;
 	}
 }
