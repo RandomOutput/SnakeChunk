@@ -153,24 +153,14 @@ package
 							}*/
 							if(getStartOf(snake1).mode == SnakeChunk.PLAYER || getStartOf(snake2).mode == SnakeChunk.PLAYER)
 							{
-								trace("----player on other hit " + FlxU.getTicks());
-								trace("-------snake2.ahead:    " + snake2.ahead);
-								trace("-------s2 mode player?: " + (snake2.mode == SnakeChunk.PLAYER));
-								trace("-------snake2 split:    " + m_splitOnceThisCollision + "\n");
-								trace("-------snake1.ahead:    " + snake1.ahead);
-								trace("-------s1 mode player?: " + (snake1.mode == SnakeChunk.PLAYER));
-								trace("-------snake1 split:    " + m_splitOnceThisCollision + "\n\n");
 								//if snake2 is player head
-								
 								if(snake2.ahead == null && snake2.mode == SnakeChunk.PLAYER && !m_splitOnceThisCollision)
-								{
-									trace("det 1");
+								{								
 									destroyNode(snake1);
 								}
 								//if snake1 is the player head
 								else if(snake1.ahead == null && snake1.mode == SnakeChunk.PLAYER && !m_splitOnceThisCollision)
 								{
-									trace("det 2");
 									destroyNode(snake2);
 								}
 								else if(snake2.ahead == null && snake2.mode != SnakeChunk.BODY && snake2.mode != SnakeChunk.PLAYER && !m_splitOnceThisCollision)
@@ -196,7 +186,6 @@ package
 
 		public function destroyNode(dead_node:SnakeChunk):void
 		{
-			trace("DET GO");
 			if(!dead_node.ahead) //if it is a head
 			{
 				if(dead_node.behind) //if it has a tail
