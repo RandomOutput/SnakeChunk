@@ -32,6 +32,7 @@ package
 		private var m_goal:GoalZone;
 		private var m_splitOnceThisCollision:Boolean;
 		private var m_splitID:String;
+		private var player:SnakeChunk;
 		
 		public function PlayState()
 		{
@@ -48,6 +49,7 @@ package
 			m_timer = new GameTimer(20, 20, START_TIME);
 			m_chunks = new FlxGroup();
 			var head:SnakeChunk = new SnakeChunk(START_X, START_Y, SnakeChunk.PLAYER);
+			player = head;
 			var last_pos:FlxPoint = new FlxPoint(START_X, START_Y);
 			m_snake = head;
 			m_chunks.add(head);
@@ -126,44 +128,21 @@ package
 									snake2.split();
 									m_splitOnceThisCollision = true;
 									m_splitID = key;
+									swapPlayer(snake1, snake2);
 								}
 								else if(snake2.mode == SnakeChunk.PLAYER && snake1.ahead.mode != SnakeChunk.PLAYER)
 								{
 									snake1.split();
 									m_splitOnceThisCollision = true;
 									m_splitID = key;
+									swapPlayer(snake1, snake2);
 								}
 							}
 						}
 						else
 						{
-							/*
-							trace("Snake Collision");
-							var tail:SnakeChunk;
-							if(getStartOf(snake2).mode != SnakeChunk.PLAYER)
-							{
-								tail = getEndOf(snake1);
-								snake1.ahead = tail;
-								tail.behind = getStartOf(snake2);
-							} else if(getStartOf(snake1).mode != SnakeChunk.PLAYER)
-							{
-								tail = getEndOf(snake2);
-								snake2.ahead = tail;
-								tail.behind = getStartOf(snake1);
-							}*/
 							if(getStartOf(snake1).mode == SnakeChunk.PLAYER || getStartOf(snake2).mode == SnakeChunk.PLAYER)
 							{
-								/*
-								//if snake2 is player head
-								if(snake2.ahead == null && snake2.mode == SnakeChunk.PLAYER && !m_splitOnceThisCollision)
-								{								
-									destroyNode(snake1);
-								}
-								//if snake1 is the player head
-								else if(snake1.ahead == null && snake1.mode == SnakeChunk.PLAYER && !m_splitOnceThisCollision)
-								{
-									destroyNode(snake2);
-								}*/
 								if(snake2.ahead == null && snake2.mode != SnakeChunk.BODY && snake2.mode != SnakeChunk.PLAYER && !m_splitOnceThisCollision)
 								{
 									var tail:SnakeChunk = getEndOf(snake1);
@@ -185,6 +164,32 @@ package
 			}
 		}
 
+		public function swapPlayer(snake1:SnakeChunk, snake2:SnakeChunk):void
+		{
+			trace("\n\nSWAP PLAYER");
+			trace("Snake1 len:     " + getChainLength(snake1));
+			trace("Snake2 len:     " + getChainLength(snake2));
+			trace("player.chainID:   " + player.chainID);
+			trace("snake1.chainID: " + snake1.chainID);
+			trace("snake2.chainID: " + snake2.chainID);
+			if(getChainLength(snake1) > getChainLength(snake2) && player.chainID != snake1.chainID)
+			{
+				trace("swap for 1");
+				var snake1Head:SnakeChunk = getStartOf(snake1);
+				player.behind.split(); //disconnect player from chain
+				player.behind = snake1Head; //connect head to new chain
+				snake1Head.ahead = player; //connnect new chain to head
+			}
+			else if(getChainLength(snake1) <= getChainLength(snake2) && player.chainID != snake2.chainID)
+			{
+				trace("swap for 2");
+				var snake2Head:SnakeChunk = getStartOf(snake2);
+				player.behind.split(); //disconnect player from chain
+				player.behind = snake2Head; //connect head to new chain
+				snake2Head.ahead = player; //connnect new chain to head
+			}
+		}
+		/*
 		public function destroyNode(dead_node:SnakeChunk):void
 		{
 			if(!dead_node.ahead) //if it is a head
@@ -213,7 +218,7 @@ package
 				dead_node = null;
 			}
 		}
-
+		*/
 		public function getStartOf(snake:SnakeChunk):SnakeChunk
 		{
 			var visited:Object = {};
@@ -230,6 +235,18 @@ package
 				current = current.ahead;
 			}
 			return current;
+		}
+
+		public function getChainLength(snake:SnakeChunk):int
+		{
+			var tail:SnakeChunk = getEndOf(snake);
+			var len:int = 0;
+			while(tail.ahead)
+			{
+				len++;
+				tail = tail.ahead;
+			}
+			return len;
 		}
 		
 		public function getEndOf(snake:SnakeChunk):SnakeChunk
