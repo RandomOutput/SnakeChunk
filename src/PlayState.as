@@ -12,14 +12,15 @@ package
 	
 	public class PlayState extends FlxState
 	{	
-		public static const START_COUNT:int = 25;
+		public static const START_COUNT:int = 18;
 		public static const SPACER_VAL:int = 30;
 		public static const COL_DIST:int = 20;
 		public static const SPEED:Number = 100;
 		public static const NODES_PER_ROW:int = 7;
-		public static const START_X:int = 600;
-		public static const START_Y:int = 100;
+		public static const START_X:int = 500;
+		public static const START_Y:int = 200;
 		public static const START_TIME:int = 100;
+		public var m_snake:SnakeChunk;
 
 		private var m_background:FlxGroup;
 		private var m_chunks:FlxGroup;
@@ -27,7 +28,6 @@ package
 		private var m_timer:GameTimer;
 		private var m_overlappedLastFrame:Object;
 		private var m_overlappedThisFrame:Object;
-		private var m_snake:SnakeChunk;
 		private var m_goal:GoalZone;
 		private var m_splitOnceThisCollision:Boolean;
 		private var m_splitID:String;
@@ -58,7 +58,7 @@ package
 			
 			m_timer = new GameTimer(265, 35, START_TIME);
 			m_chunks = new FlxGroup();
-			var head:SnakeChunk = new SnakeChunk(START_X, START_Y, SnakeChunk.PLAYER);
+			var head:SnakeChunk = new SnakeChunk(START_X, START_Y, SnakeChunk.PLAYER, this);
 			var last_pos:FlxPoint = new FlxPoint(START_X, START_Y);
 			m_snake = head;
 			m_chunks.add(head);
@@ -72,9 +72,10 @@ package
 					xSwap *= -1;
 				}
 				var nextPos:FlxPoint = new FlxPoint(last_pos.x + (xSwap * 35), START_Y + (Math.floor(i / NODES_PER_ROW) * 80));
-				var next:SnakeChunk = new SnakeChunk(nextPos.x, nextPos.y, SnakeChunk.BODY);
+				var next:SnakeChunk = new SnakeChunk(nextPos.x, nextPos.y, SnakeChunk.BODY, this);
 				last_pos = nextPos;
 				var nextType:int = Math.floor(Math.random() * 3) + 3;
+				//var nextType:int = 5;
 				next.setBreakType(nextType);
 				next.ahead = head;
 				head.behind = next;
@@ -87,8 +88,8 @@ package
 			m_goal = new GoalZone(450, 400);
 			add(m_background);
 			add(new MousePointer());
-			add(m_static);
 			add(m_goal);
+			add(m_static);
 			add(m_chunks);
 			add(m_timer);
 			add(m_sepia);
