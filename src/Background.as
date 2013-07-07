@@ -15,7 +15,7 @@ package
 			m_background = new FlxSprite();
 			m_background.loadGraphic(backgroundImage, false, false, 707, 600);
 
-			add(m_background);
+			//add(m_background);
 
 		}
 
