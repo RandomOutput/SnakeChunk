@@ -85,10 +85,10 @@ package
 			m_goal = new GoalZone(450, 400);
 			add(m_background);
 			add(new MousePointer());
+			add(m_static);
 			add(m_goal);
 			add(m_chunks);
 			add(m_timer);
-			add(m_static);
 			add(m_sepia);
 		}
 		
