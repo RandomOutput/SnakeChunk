@@ -109,11 +109,11 @@ package
 			
 			for (var j:int = 0; j < m_explosion.maxSize/2; j++) {
 				var whitePixel:FlxParticle = new FlxParticle();
-				whitePixel.makeGraphic(3, 3, 0x55000000);
+				whitePixel.makeGraphic(3, 3, 0x4d000000);
 				whitePixel.visible = false; //Make sure the particle doesn't show up at (0, 0)
 				m_explosion.add(whitePixel);
 				whitePixel = new FlxParticle();
-				whitePixel.makeGraphic(2, 2, 0x55000000);
+				whitePixel.makeGraphic(2, 2, 0x4d000000);
 				whitePixel.visible = false;
 				m_explosion.add(whitePixel);
 			}
