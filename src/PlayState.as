@@ -16,10 +16,11 @@ package
 		public static const START_COUNT:int = 40;
 		public static const SPACER_VAL:int = 30;
 		public static const COL_DIST:int = 15;
-		public static const SPEED:Number = 70;
+		public static const SPEED:Number = 60;
 		public static const NODES_PER_ROW:int = 10;
 		public static const START_X:int = 600;
 		public static const START_Y:int = 100;
+		public static const START_TIME:int = 100;
 
 		private var m_background:FlxGroup;
 		private var m_chunks:FlxGroup;
@@ -44,7 +45,7 @@ package
 			FlxG.bgColor = 0xffffff;
 			m_background = new Background();
 			
-			m_timer = new GameTimer(20, 20, 60);
+			m_timer = new GameTimer(20, 20, START_TIME);
 			m_chunks = new FlxGroup();
 			var head:SnakeChunk = new SnakeChunk(START_X, START_Y, SnakeChunk.PLAYER);
 			var last_pos:FlxPoint = new FlxPoint(START_X, START_Y);
@@ -61,7 +62,6 @@ package
 				var next:SnakeChunk = new SnakeChunk(nextPos.x, nextPos.y, SnakeChunk.BODY);
 				last_pos = nextPos;
 				var nextType:int = Math.floor(Math.random() * 3) + 3;
-				trace("type: " + nextType);
 				next.setBreakType(nextType);
 				next.ahead = head;
 				head.behind = next;

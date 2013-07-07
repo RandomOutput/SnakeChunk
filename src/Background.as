@@ -13,7 +13,9 @@ package
 		{
 			super();
 			m_background = new FlxSprite();
-			m_background.loadGraphic(backgroundImage, false, false, 707, 600);
+			m_background.loadGraphic(backgroundImage, true, false, 700, 600);
+			m_background.addAnimation("shimmer", [0,1,2], 6, true);
+			m_background.play("shimmer");
 
 			add(m_background);
 
