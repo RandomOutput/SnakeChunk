@@ -3,11 +3,14 @@
 package
 {
 	import flash.geom.Point;
+	
 	import PlayState;
+	
 	import org.flixel.FlxG;
 	import org.flixel.FlxPoint;
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxU;
+	import org.flixel.plugin.photonstorm.FlxVelocity;
 	
 	public class SnakeChunk extends FlxSprite
 	{
@@ -76,50 +79,14 @@ package
 			switch(m_mode)
 			{
 				case PLAYER:
-					var newVelocity:FlxPoint = new FlxPoint();
-					if(FlxG.keys.UP && !FlxG.keys.DOWN)
-					{
-						newVelocity.y = Math.max(velocity.y - 5, -1 * PlayState.SPEED);
-					}
-					else if(!FlxG.keys.UP && FlxG.keys.DOWN)
-					{
-						newVelocity.y = Math.max(velocity.x + 5, PlayState.SPEED);
-					}
-					else
-					{
-						newVelocity.y = velocity.y * .8;
-					}
-					if(FlxG.keys.LEFT && !FlxG.keys.RIGHT)
-					{	
-						newVelocity.x = Math.max(velocity.x - 5, -1 * PlayState.SPEED);
-					}
-					else if(!FlxG.keys.LEFT && FlxG.keys.RIGHT)
-					{
-						newVelocity.x = Math.min(velocity.x + 5, PlayState.SPEED);
-					}
-					else
-					{
-						newVelocity.x = velocity.x * .8;
-					}
-					/*WORK THIS OUT LATER*/
-					//var distance:Number = Math.max(FlxU.getDistance(ZERO, newVelocity), Number.MIN_VALUE);
-					//newVelocity.x  /= distance;
-				//	newVelocity.y  /= distance;
-					//var p:FlxPoint = new FlxPoint(x - m_behind.x, y - m_behind.y);
-					//var distance2:Number = Math.max(FlxU.getDistance(ZERO, p), Number.MIN_VALUE);
-					var dot:Number =1; //newVelocity.x / distance * p.x / distance + newVelocity.y /distance * p.y / distance;
-					velocity.x = newVelocity.x * dot;
-					velocity.y = newVelocity.y * dot;
-
-					//velocity.x *= PlayState.SPEED_MULT;
-					//velocity.y *= PlayState.SPEED_MULT; 
+					this.velocity = FlxVelocity.velocityFromAngle(FlxVelocity.angleBetweenMouse(this, true), PlayState.SPEED);
 					break;
 				case BODY:
 					if(m_ahead != null)
 					{
 						var distance:Number = Math.max(FlxU.getDistance(new FlxPoint(x, y), new FlxPoint(m_ahead.lastX, m_ahead.lastY)), Number.MIN_VALUE);
-						newVelocity = new FlxPoint((m_ahead.lastX - x) / distance, (m_ahead.lastY - y) / distance);
-						dot = newVelocity.x * m_ahead.lastVelocity.x + newVelocity.y * m_ahead.lastVelocity.y;
+						var newVelocity:FlxPoint = new FlxPoint((m_ahead.lastX - x) / distance, (m_ahead.lastY - y) / distance);
+						var dot:Number = newVelocity.x * m_ahead.lastVelocity.x + newVelocity.y * m_ahead.lastVelocity.y;
 						
 						//space out node after player head
 						if(this.ahead.mode == SnakeChunk.PLAYER)
@@ -132,9 +99,6 @@ package
 							velocity.x = newVelocity.x * dot * .3 + velocity.x * .7 + (newVelocity.x * (distance - PlayState.SPACER_VAL));
 							velocity.y = newVelocity.y * dot * .3 + velocity.y * .7 + (newVelocity.y * (distance - PlayState.SPACER_VAL));
 						}
-						
-						
-						
 					}
 					break;
 				case RANDOM:
