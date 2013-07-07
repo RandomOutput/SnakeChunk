@@ -8,9 +8,12 @@ package
 	
 	public class Background extends FlxGroup
 	{
-		private static const SHADOW_SPAWN_RATE:int = 5000; //in ticks
-		private static const SHADOW_SPAWN_RANGE:int = 500; //in ticks
-		private static const SHADOW_SPEED:int = 100;
+		private const SHADOW_SPAWN_RATE:int = 15000; //in ticks
+		private const SHADOW_SPAWN_RANGE:int = 500; //in ticks
+		private const SHADOW_SPEED:int = 50;
+		private const SHADOW_SPEED_RANGE:int = 20;
+		private const SHADOW_ROTATE_SPEED:int = 20;
+		private const SHADOW_ROTATE_SPEED_RANGE:int = 10; 
 
 		private var m_background:FlxSprite;
 
@@ -73,10 +76,10 @@ package
 
 			add(newShadow);
 			
-			newShadow.velocity.x *= SHADOW_SPEED;
-			newShadow.velocity.y *= SHADOW_SPEED;
+			newShadow.velocity.x *= Math.floor((Math.random()*SHADOW_SPEED_RANGE) - SHADOW_SPEED_RANGE/2) + SHADOW_SPEED;
+			newShadow.velocity.y *= Math.floor((Math.random()*SHADOW_SPEED_RANGE) - SHADOW_SPEED_RANGE/2) + SHADOW_SPEED;
 
-			trace("velocityX: " + newShadow.velocity.x);
+			newShadow.angularVelocity = Math.floor((Math.random()*SHADOW_ROTATE_SPEED_RANGE) - SHADOW_ROTATE_SPEED_RANGE/2) + SHADOW_ROTATE_SPEED;
 
 		}
 

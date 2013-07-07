@@ -15,6 +15,7 @@ package
 		public static const BODY:int = 2;
 		public static const RANDOM:int = 3;
 		public static const INVADER:int = 4;
+		public static const BOUNCY_SQUEEK:int = 5;
 
 		private const PINK_SIZE:int = 41;
 		private const PLAYER_SIZE_X:int = 72;
@@ -169,6 +170,9 @@ package
 							ySwap *= -1;
 						}
 					}
+					break;
+				case BOUNCY_SQUEEK:
+
 					break;
 				default:
 					if(FlxU.getTicks() > m_resetTime)

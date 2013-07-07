@@ -15,7 +15,7 @@ package
 	{	
 		public static const START_COUNT:int = 25;
 		public static const SPACER_VAL:int = 30;
-		public static const COL_DIST:int = 15;
+		public static const COL_DIST:int = 20;
 		public static const SPEED:Number = 100;
 		public static const NODES_PER_ROW:int = 7;
 		public static const START_X:int = 600;
@@ -32,7 +32,6 @@ package
 		private var m_goal:GoalZone;
 		private var m_splitOnceThisCollision:Boolean;
 		private var m_splitID:String;
-		//private var player:SnakeChunk;
 		
 		public function PlayState()
 		{
@@ -46,10 +45,9 @@ package
 			FlxG.bgColor = 0xffffff;
 			m_background = new Background();
 			
-			m_timer = new GameTimer(20, 20, START_TIME);
+			m_timer = new GameTimer(265, 35, START_TIME);
 			m_chunks = new FlxGroup();
 			var head:SnakeChunk = new SnakeChunk(START_X, START_Y, SnakeChunk.PLAYER);
-			//player = head;
 			var last_pos:FlxPoint = new FlxPoint(START_X, START_Y);
 			m_snake = head;
 			m_chunks.add(head);
