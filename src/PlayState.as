@@ -153,6 +153,7 @@ package
 							}*/
 							if(getStartOf(snake1).mode == SnakeChunk.PLAYER || getStartOf(snake2).mode == SnakeChunk.PLAYER)
 							{
+								/*
 								//if snake2 is player head
 								if(snake2.ahead == null && snake2.mode == SnakeChunk.PLAYER && !m_splitOnceThisCollision)
 								{								
@@ -162,8 +163,8 @@ package
 								else if(snake1.ahead == null && snake1.mode == SnakeChunk.PLAYER && !m_splitOnceThisCollision)
 								{
 									destroyNode(snake2);
-								}
-								else if(snake2.ahead == null && snake2.mode != SnakeChunk.BODY && snake2.mode != SnakeChunk.PLAYER && !m_splitOnceThisCollision)
+								}*/
+								if(snake2.ahead == null && snake2.mode != SnakeChunk.BODY && snake2.mode != SnakeChunk.PLAYER && !m_splitOnceThisCollision)
 								{
 									var tail:SnakeChunk = getEndOf(snake1);
 									snake2.ahead = tail;
