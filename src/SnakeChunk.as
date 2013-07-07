@@ -119,7 +119,7 @@ package
 			lastY = y;
 			super.update();
 			
-			if(m_disableTimer < FlxU.getTicks() || mode == BODY)
+			if(m_disableTimer < FlxU.getTicks() )//|| mode == BODY)
 			{
 				switch(m_mode)
 				{
