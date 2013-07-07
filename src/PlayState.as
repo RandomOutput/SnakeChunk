@@ -2,9 +2,11 @@ package
 {
 	import flash.utils.Dictionary;
 	
+	import org.flixel.FlxEmitter;
 	import org.flixel.FlxG;
 	import org.flixel.FlxGroup;
 	import org.flixel.FlxObject;
+	import org.flixel.FlxParticle;
 	import org.flixel.FlxPoint;
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxState;
@@ -33,6 +35,7 @@ package
 		private var m_splitID:String;
 		private var m_static:FlxSprite;
 		private var m_sepia:FlxSprite;
+		private var m_explosion:FlxEmitter
 		
 		public function PlayState()
 		{
@@ -83,15 +86,37 @@ package
 				chunks.push(head);
 			}
 			
+			
+			m_explosion = new FlxEmitter(10, FlxG.height / 2, 200);
+			m_explosion.setXSpeed(-500, 500);
+			m_explosion.setYSpeed( -500, 500);
+			
+			
+			for (var i:int = 0; i < m_explosion.maxSize/2; i++) {
+				var whitePixel:FlxParticle = new FlxParticle();
+				whitePixel.makeGraphic(3, 3, 0x55000000);
+				whitePixel.visible = false; //Make sure the particle doesn't show up at (0, 0)
+				m_explosion.add(whitePixel);
+				whitePixel = new FlxParticle();
+				whitePixel.makeGraphic(2, 2, 0x55000000);
+				whitePixel.visible = false;
+				m_explosion.add(whitePixel);
+			}
+			
+			
 			m_background = new Background(chunks);
 			m_goal = new GoalZone(450, 400);
 			add(m_background);
 			add(new MousePointer());
 			add(m_static);
 			add(m_goal);
+			add(m_explosion);
 			add(m_chunks);
 			add(m_timer);
 			add(m_sepia);
+			
+			
+			
 		}
 		
 		override public function update():void
@@ -202,6 +227,10 @@ package
 			}
 			splitOffChunk = getStartOf(splitOffChunk);
 			splitOffChunk.disable();
+			m_explosion.x = splitOffChunk.x + splitOffChunk.origin.x;
+			m_explosion.y = splitOffChunk.y + splitOffChunk.origin.y;
+			m_explosion.start(true, 1, 0.1, 50);
+			
 		}
 		/*
 		public function destroyNode(dead_node:SnakeChunk):void
