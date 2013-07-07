@@ -565,7 +565,6 @@ package org.flixel
 			direction.x /= distance;
 			direction.y /= distance;
 			var iterations:int = distance / subdivisionLength - 1;
-			trace(randomSeed);
 			for(var i:int = 0; i < iterations; ++i)
 			{
 				
