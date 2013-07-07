@@ -24,6 +24,7 @@ package
 		public static const BODY:int = 2;
 		public static const RANDOM:int = 3;
 		public static const INVADER:int = 4;
+		public static const BOUNCY_SQUEEK:int = 5;
 
 		private const PINK_SIZE:int = 41;
 		private const PLAYER_SIZE_X:int = 72;
@@ -187,18 +188,21 @@ package
 								ySwap *= -1;
 							}
 						}
-						break;
+					break;
+					case BOUNCY_SQUEEK:
+					
+					break;
 					default:
-						if(FlxU.getTicks() > m_resetTime)
-						{
-							velocity.x = Math.random() - .5;
-							velocity.y = Math.random() - .5;
-							distance = Math.max(FlxU.getDistance(ZERO, velocity), Number.MIN_VALUE);
-							velocity.x =  (velocity.x / distance) * 100;
-							velocity.y = (velocity.y / distance)  * 100;
-							m_resetTime = FlxU.getTicks() + Math.random() * 3000;
-						}
-						break;
+					if(FlxU.getTicks() > m_resetTime)
+					{
+						velocity.x = Math.random() - .5;
+						velocity.y = Math.random() - .5;
+						distance = Math.max(FlxU.getDistance(ZERO, velocity), Number.MIN_VALUE);
+						velocity.x =  (velocity.x / distance) * 100;
+						velocity.y = (velocity.y / distance)  * 100;
+						m_resetTime = FlxU.getTicks() + Math.random() * 3000;
+					}
+					break;
 				}
 				
 			}

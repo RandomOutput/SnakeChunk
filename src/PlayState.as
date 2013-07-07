@@ -15,7 +15,7 @@ package
 	{	
 		public static const START_COUNT:int = 25;
 		public static const SPACER_VAL:int = 30;
-		public static const COL_DIST:int = 15;
+		public static const COL_DIST:int = 20;
 		public static const SPEED:Number = 100;
 		public static const NODES_PER_ROW:int = 7;
 		public static const START_X:int = 600;
@@ -32,7 +32,8 @@ package
 		private var m_goal:GoalZone;
 		private var m_splitOnceThisCollision:Boolean;
 		private var m_splitID:String;
-		//private var player:SnakeChunk;
+		private var m_static:FlxSprite;
+		private var m_sepia:FlxSprite;
 		
 		public function PlayState()
 		{
@@ -45,11 +46,21 @@ package
 
 			FlxG.bgColor = 0xffffff;
 			m_background = new Background();
+			m_static = new FlxSprite();
+			m_static.loadGraphic(staticImage, true, false, 700, 600);
+			m_static.blend = 'overlay';
+			m_static.alpha = .75;
+			m_static.addAnimation('go', [0,1,2,3], 10, true);
+			m_static.play('go');
+
+			m_sepia = new FlxSprite();
+			m_sepia.loadGraphic(sepiaImage, true, false, 700, 600);
+			m_sepia.blend = 'overlay';
+			m_sepia.alpha = .5;
 			
-			m_timer = new GameTimer(20, 20, START_TIME);
+			m_timer = new GameTimer(265, 35, START_TIME);
 			m_chunks = new FlxGroup();
 			var head:SnakeChunk = new SnakeChunk(START_X, START_Y, SnakeChunk.PLAYER);
-			//player = head;
 			var last_pos:FlxPoint = new FlxPoint(START_X, START_Y);
 			m_snake = head;
 			m_chunks.add(head);
@@ -77,6 +88,8 @@ package
 			add(m_goal);
 			add(m_chunks);
 			add(m_timer);
+			add(m_static);
+			add(m_sepia);
 		}
 		
 		override public function update():void
@@ -267,7 +280,11 @@ package
 			return current;
 		}
 
-		
+		[Embed(source="/images/static.png")]
+		private static var staticImage:Class;
+
+		[Embed(source="/images/sepia.png")]
+		private static var sepiaImage:Class;
 		
 	}
 	
