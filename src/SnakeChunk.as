@@ -17,12 +17,14 @@ package
 		public static const INVADER:int = 4;
 
 		private const PINK_SIZE:int = 41;
+		private const PLAYER_SIZE_X:int = 72;
+		private const PLAYER_SIZE_Y:int = 38;
 		
 		private static var s_nextID:int = 0;
 		public static var ZERO:FlxPoint = new FlxPoint();
 		
-		public static const WIDTH:int = 30
-		public static const HEIGHT:int = 30;
+		public static var WIDTH:int = 30
+		public static var HEIGHT:int = 30;
 		
 		private var m_mode:int;
 		private var m_type:int;
@@ -52,7 +54,9 @@ package
 			lastX = X;
 			lastY = Y;
 
-			loadGraphic(pinkChunkImage, false, false, PINK_SIZE, PINK_SIZE);
+			loadGraphic(playerChunkImage, false, false, PLAYER_SIZE_X, PLAYER_SIZE_Y);
+			WIDTH = PLAYER_SIZE_X;
+			HEIGHT = PLAYER_SIZE_Y;
 
 			m_mode = mode;
 			if(m_mode != BODY)
@@ -116,8 +120,18 @@ package
 						var distance:Number = Math.max(FlxU.getDistance(new FlxPoint(x, y), new FlxPoint(m_ahead.lastX, m_ahead.lastY)), Number.MIN_VALUE);
 						newVelocity = new FlxPoint((m_ahead.lastX - x) / distance, (m_ahead.lastY - y) / distance);
 						dot = newVelocity.x * m_ahead.lastVelocity.x + newVelocity.y * m_ahead.lastVelocity.y;
-						velocity.x = newVelocity.x * dot * .3 + velocity.x * .7 + (newVelocity.x * (distance - PlayState.SPACER_VAL));
-						velocity.y = newVelocity.y * dot * .3 + velocity.y * .7 + (newVelocity.y * (distance - PlayState.SPACER_VAL));
+						
+						//space out node after player head
+						if(this.ahead.mode == SnakeChunk.PLAYER)
+						{
+							velocity.x = newVelocity.x * dot * .3 + velocity.x * .7 + (newVelocity.x * (distance - PlayState.SPACER_VAL - 25));
+							velocity.y = newVelocity.y * dot * .3 + velocity.y * .7 + (newVelocity.y * (distance - PlayState.SPACER_VAL - 25));
+						} 
+						else //normal
+						{
+							velocity.x = newVelocity.x * dot * .3 + velocity.x * .7 + (newVelocity.x * (distance - PlayState.SPACER_VAL));
+							velocity.y = newVelocity.y * dot * .3 + velocity.y * .7 + (newVelocity.y * (distance - PlayState.SPACER_VAL));
+						}
 						
 						
 						
@@ -211,12 +225,18 @@ package
 			{
 				case 3:
 					loadGraphic(redChunkImage, false, false, PINK_SIZE, PINK_SIZE);
+					WIDTH = PINK_SIZE;
+					HEIGHT = PINK_SIZE;
 					break;	
 				case 4: 
 					loadGraphic(pinkChunkImage, false, false, PINK_SIZE, PINK_SIZE);
+					WIDTH = PINK_SIZE;
+					HEIGHT = PINK_SIZE;
 					break;
 				case 5: 
 					loadGraphic(purpleChunkImage, false, false, PINK_SIZE, PINK_SIZE);
+					WIDTH = PINK_SIZE;
+					HEIGHT = PINK_SIZE;
 					break;
 				default:
 					makeGraphic(25, 25, 0xffff0000); 
@@ -331,5 +351,8 @@ package
 
 		[Embed(source="/images/chunk_red.png")]
 		private static var redChunkImage:Class;
+
+		[Embed(source="/images/chunk_player.png")]
+		private static var playerChunkImage:Class;
 	}
 }

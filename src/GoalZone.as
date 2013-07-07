@@ -7,7 +7,7 @@ package
 		public function GoalZone(X:Number=0, Y:Number=0)
 		{
 			super(X, Y, null);
-			makeGraphic(50, 70, 0xff00ff00);
+			loadGraphic(goalZoneImage, false, false, 102, 102);
 		}
 		
 		public function checkSnake(snake:SnakeChunk):Boolean
@@ -28,7 +28,7 @@ package
 			var tail:SnakeChunk = head;
 			while(tail)
 			{
-				if(tail.x < x || tail.y < y || tail.x + tail.width > x + width || tail.y + tail.height > y + height)
+				if(tail.x + (tail.width/2) < x || tail.y + (tail.height/2) < y || tail.x + (tail.width/2) + tail.width > x + width || tail.y + (tail.height/2) > y + height)
 				{
 					return false;
 				}
@@ -36,5 +36,12 @@ package
 			}
 			return true;
 		}
+
+		//*** Assets ***
+		[Embed(source="/images/goal_zone.png")]
+		private static var goalZoneImage:Class;
+
 	}
+
+
 }

@@ -13,15 +13,15 @@ package
 	
 	public class PlayState extends FlxState
 	{	
-		public static const START_COUNT:int = 60;
+		public static const START_COUNT:int = 25;
 		public static const SPACER_VAL:int = 30;
 		public static const COL_DIST:int = 15;
-		public static const SPEED:Number = 75;
-		public static const NODES_PER_ROW:int = 15;
+		public static const SPEED:Number = 100;
+		public static const NODES_PER_ROW:int = 10;
 		public static const START_X:int = 600;
 		public static const START_Y:int = 100;
 
-		private var m_background:FlxSprite;
+		private var m_background:FlxGroup;
 		private var m_chunks:FlxGroup;
 		private var m_collideCooldown:uint = 0;
 		private var m_timer:GameTimer;
@@ -42,9 +42,9 @@ package
 			var xSwap:int = 1;
 
 			FlxG.bgColor = 0xffffff;
-			m_background = new FlxSprite();
-			m_background.makeGraphic(700,600,0xffffffff);
-			m_timer = new GameTimer(80, 80, 60);
+			m_background = new Background();
+			
+			m_timer = new GameTimer(20, 20, 60);
 			m_chunks = new FlxGroup();
 			var head:SnakeChunk = new SnakeChunk(START_X, START_Y, SnakeChunk.PLAYER);
 			var last_pos:FlxPoint = new FlxPoint(START_X, START_Y);
@@ -105,6 +105,7 @@ package
 		protected function overlap(chunk1:FlxObject, chunk2:FlxObject):void
 		{
 			//if(FlxCollision.pixelPerfectCheck(chunk1 as FlxSprite, chunk2 as FlxSprite))
+			//use distance based collision
 			if(FlxU.getDistance(new FlxPoint(chunk1.x, chunk1.y), new FlxPoint(chunk2.x, chunk2.y)) < COL_DIST)
 			{
 				if(chunk1 is SnakeChunk && chunk2 is SnakeChunk)
@@ -208,6 +209,8 @@ package
 			}
 			return current;
 		}
+
+		
 		
 	}
 	
