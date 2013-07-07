@@ -26,6 +26,9 @@ package org.flixel
 		 * pretty out-of-sync if you do any rotation.
 		 */
 		public var origin:FlxPoint;
+		
+		public static var ZERO:FlxPoint = new FlxPoint();
+		
 		/**
 		* If you changed the size of your sprite object after loading or making the graphic,
 		* you might need to offset the graphic away from the bound box to center it the way you want.
@@ -527,6 +530,57 @@ package org.flixel
 			if(alphaComponent <= 0)
 				alphaComponent = 1;
 			gfx.lineStyle(Thickness,Color,alphaComponent);
+			gfx.lineTo(EndX,EndY);
+			
+			//Cache line to bitmap
+			_pixels.draw(FlxG.flashGfxSprite);
+			dirty = true;
+		}
+		
+		/**
+		 * This function draws a line on this sprite from position X1,Y1
+		 * to position X2,Y2 with the specified color.
+		 * 
+		 * @param	StartX		X coordinate of the line's start point.
+		 * @param	StartY		Y coordinate of the line's start point.
+		 * @param	EndX		X coordinate of the line's end point.
+		 * @param	EndY		Y coordinate of the line's end point.
+		 * @param	Color		The line's color.
+		 * @param	Thickness	How thick the line is in pixels (default value is 1).
+		 */
+		public function drawSketchyLine(StartX:Number,StartY:Number,EndX:Number,EndY:Number,Color:uint,Thickness:uint=1, randomSeed:Number = -1,subdivisionLength:Number = 100, jitter:Number = 5):void
+		{
+			//Draw line
+			var gfx:Graphics = FlxG.flashGfx;
+			gfx.clear();
+			gfx.moveTo(StartX,StartY);
+			var alphaComponent:Number = Number((Color >> 24) & 0xFF) / 255;
+			if(alphaComponent <= 0)
+				alphaComponent = 1;
+			gfx.lineStyle(Thickness,Color,alphaComponent);
+			var currX:Number = StartX;
+			var currY:Number = StartY;
+			var direction:FlxPoint = new FlxPoint(EndX - currX, EndY - currY);
+			var distance:Number = FlxU.getDistance(ZERO, direction);
+			direction.x /= distance;
+			direction.y /= distance;
+			var iterations:int = distance / subdivisionLength - 1;
+			for(var i:int = 0; i < iterations; ++i)
+			{
+				
+				var perp:FlxPoint = new FlxPoint(direction.y, -direction.x);
+				randomSeed =  FlxU.srand(randomSeed);
+				var offset:Number = randomSeed * jitter* 2 - jitter;
+				var nextX:Number = currX + direction.x * subdivisionLength + perp.x * offset;
+				var nextY:Number = currY + direction.y * subdivisionLength + perp.y * offset;
+				gfx.lineTo(nextX, nextY);
+				currX = nextX;
+				currY = nextY;
+				direction = new FlxPoint(EndX - currX, EndY - currY);
+				distance = FlxU.getDistance(ZERO, direction);
+				direction.x /= distance;
+				direction.y /= distance;
+			}
 			gfx.lineTo(EndX,EndY);
 			
 			//Cache line to bitmap

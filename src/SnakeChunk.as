@@ -31,7 +31,6 @@ package
 		private const PLAYER_SIZE_Y:int = 38;
 		
 		private static var s_nextID:int = 0;
-		public static var ZERO:FlxPoint = new FlxPoint();
 		
 		public static var WIDTH:int = 30
 		public static var HEIGHT:int = 30;
