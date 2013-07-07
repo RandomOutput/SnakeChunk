@@ -2,12 +2,21 @@
 
 package
 {
+
+	
+	import flash.display.BitmapData;
+	import flash.filters.ColorMatrixFilter;
 	import flash.geom.Point;
+	
 	import PlayState;
-	import org.flixel.FlxG;
+	
+	import SnakeMath.Quaternion;
+	
 	import org.flixel.FlxPoint;
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxU;
+	import org.flixel.plugin.photonstorm.FlxMath;
+	import org.flixel.plugin.photonstorm.FlxVelocity;
 	
 	public class SnakeChunk extends FlxSprite
 	{
@@ -44,6 +53,13 @@ package
 		public var chainID:uint;
 		public var chunkID:uint;
 		
+		private var m_disableTimer:uint;
+		private var m_disabled:Boolean;
+		private var m_cloned:BitmapData;
+		
+		private static var s_desat:ColorMatrixFilter = new ColorMatrixFilter(new Array(0.309, 0.609, 0.082, 0, 0, 0.309, 0.609, 0.082, 0, 0, 0.309, 0.609, 0.082, 0, 0, 0, 0, 0, 1, 0));
+		private static var s_resat:ColorMatrixFilter = new ColorMatrixFilter(new Array(1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0));
+		
 		public function get nextID():int
 		{
 			return ++s_nextID;
@@ -54,6 +70,7 @@ package
 			super(X, Y, null);
 			lastX = X;
 			lastY = Y;
+			
 
 			loadGraphic(playerChunkImage, false, false, PLAYER_SIZE_X, PLAYER_SIZE_Y);
 			WIDTH = PLAYER_SIZE_X;
@@ -68,77 +85,114 @@ package
 			m_lastVelocity = new FlxPoint(0,0);
 		}
 		
+		public function disable():void
+		{
+			m_cloned = framePixels.clone();
+			this.framePixels.applyFilter(m_cloned, framePixels.rect, new Point(), s_desat);
+			velocity = FlxVelocity.velocityFromAngle(Math.random() * 360, 300);
+			m_disabled = true;
+			if(m_behind)
+			{
+				m_behind.disable();
+			}
+			m_disableTimer = FlxU.getTicks() + 3000;
+		}
+		
+		public function isDisabled():Boolean
+		{
+			return m_disabled;
+		}
+		
+		private function turnToFace(desiredAngle, ca:Number, turnSpeed:Number):Number
+		{   
+			var q1:Quaternion = Quaternion.createFromAxisAngle(0, 1, 0, FlxMath.asRadians(desiredAngle));
+			var q2:Quaternion = Quaternion.createFromAxisAngle(0, 1, 0, FlxMath.asRadians(ca));
+			var qOut:Quaternion = Quaternion.slerp(q2, q1, .02);
+			var outAngle:Number = FlxMath.asDegrees(qOut.toEuler().x);
+			return outAngle; 
+		}
+		
 		public override function update():void
 		{
 			m_lastVelocity = new FlxPoint(velocity.x, velocity.y);
 			lastX = x;
 			lastY = y;
 			super.update();
-			switch(m_mode)
+			
+			if(m_disableTimer < FlxU.getTicks() )//|| mode == BODY)
 			{
-				case PLAYER:
-					var newVelocity:FlxPoint = new FlxPoint();
-					if(FlxG.keys.UP && !FlxG.keys.DOWN)
-					{
-						newVelocity.y = Math.max(velocity.y - 5, -1 * PlayState.SPEED);
-					}
-					else if(!FlxG.keys.UP && FlxG.keys.DOWN)
-					{
-						newVelocity.y = Math.max(velocity.x + 5, PlayState.SPEED);
-					}
-					else
-					{
-						newVelocity.y = velocity.y * .8;
-					}
-					if(FlxG.keys.LEFT && !FlxG.keys.RIGHT)
-					{	
-						newVelocity.x = Math.max(velocity.x - 5, -1 * PlayState.SPEED);
-					}
-					else if(!FlxG.keys.LEFT && FlxG.keys.RIGHT)
-					{
-						newVelocity.x = Math.min(velocity.x + 5, PlayState.SPEED);
-					}
-					else
-					{
-						newVelocity.x = velocity.x * .8;
-					}
-					/*WORK THIS OUT LATER*/
-					//var distance:Number = Math.max(FlxU.getDistance(ZERO, newVelocity), Number.MIN_VALUE);
-					//newVelocity.x  /= distance;
-				//	newVelocity.y  /= distance;
-					//var p:FlxPoint = new FlxPoint(x - m_behind.x, y - m_behind.y);
-					//var distance2:Number = Math.max(FlxU.getDistance(ZERO, p), Number.MIN_VALUE);
-					var dot:Number =1; //newVelocity.x / distance * p.x / distance + newVelocity.y /distance * p.y / distance;
-					velocity.x = newVelocity.x * dot;
-					velocity.y = newVelocity.y * dot;
-
-					//velocity.x *= PlayState.SPEED_MULT;
-					//velocity.y *= PlayState.SPEED_MULT; 
-					break;
-				case BODY:
-					if(m_ahead != null)
-					{
-						var distance:Number = Math.max(FlxU.getDistance(new FlxPoint(x, y), new FlxPoint(m_ahead.lastX, m_ahead.lastY)), Number.MIN_VALUE);
-						newVelocity = new FlxPoint((m_ahead.lastX - x) / distance, (m_ahead.lastY - y) / distance);
-						dot = newVelocity.x * m_ahead.lastVelocity.x + newVelocity.y * m_ahead.lastVelocity.y;
-						
-						//space out node after player head
-						if(this.ahead.mode == SnakeChunk.PLAYER)
+				switch(m_mode)
+				{
+					case PLAYER:
+						if(FlxVelocity.distanceToMouse(this) > 10)
 						{
-							velocity.x = newVelocity.x * dot * .3 + velocity.x * .7 + (newVelocity.x * (distance - PlayState.SPACER_VAL - 25));
-							velocity.y = newVelocity.y * dot * .3 + velocity.y * .7 + (newVelocity.y * (distance - PlayState.SPACER_VAL - 25));
-						} 
-						else //normal
-						{
-							velocity.x = newVelocity.x * dot * .3 + velocity.x * .7 + (newVelocity.x * (distance - PlayState.SPACER_VAL));
-							velocity.y = newVelocity.y * dot * .3 + velocity.y * .7 + (newVelocity.y * (distance - PlayState.SPACER_VAL));
+							var target:Number = FlxVelocity.angleBetweenMouse(this, true);
+							angle = turnToFace(target, angle, 1);
+							this.velocity = FlxVelocity.velocityFromAngle(angle, PlayState.SPEED);
 						}
-						
-						
-						
-					}
+						else
+						{
+							this.velocity.x = 0;
+							this.velocity.y = 0;
+						}
+						break;
+					case BODY:
+						if(m_ahead != null)
+						{
+							var distance:Number = Math.max(FlxU.getDistance(new FlxPoint(x, y), new FlxPoint(m_ahead.lastX, m_ahead.lastY)), Number.MIN_VALUE);
+							var newVelocity:FlxPoint = new FlxPoint((m_ahead.lastX - x) / distance, (m_ahead.lastY - y) / distance);
+							var dot:Number = newVelocity.x * m_ahead.lastVelocity.x + newVelocity.y * m_ahead.lastVelocity.y;
+							
+							//space out node after player head
+							if(this.ahead.mode == SnakeChunk.PLAYER)
+							{
+								velocity.x = newVelocity.x * dot * .3 + velocity.x * .7 + (newVelocity.x * (distance - PlayState.SPACER_VAL - 25));
+								velocity.y = newVelocity.y * dot * .3 + velocity.y * .7 + (newVelocity.y * (distance - PlayState.SPACER_VAL - 25));
+							} 
+							else //normal
+							{
+								velocity.x = newVelocity.x * dot * .3 + velocity.x * .7 + (newVelocity.x * (distance - PlayState.SPACER_VAL));
+								velocity.y = newVelocity.y * dot * .3 + velocity.y * .7 + (newVelocity.y * (distance - PlayState.SPACER_VAL));
+							}
+						}
+						break;
+					case RANDOM:
+						if(FlxU.getTicks() > m_resetTime)
+						{
+							velocity.x = Math.random() - .5;
+							velocity.y = Math.random() - .5;
+							distance = Math.max(FlxU.getDistance(ZERO, velocity), Number.MIN_VALUE);
+							velocity.x =  (velocity.x / distance) * 100;
+							velocity.y = (velocity.y / distance)  * 100;
+							m_resetTime = FlxU.getTicks() + Math.random() * 3000;
+						}
+						break;
+					case INVADER:
+						if(FlxU.getTicks() > m_dropTime)
+						{
+							velocity.x = xSwap * 100;
+							velocity.y = 0;
+							
+							if(x > 700 - width || x < 0)
+							{
+								xSwap *= -1;
+								m_dropTime = FlxU.getTicks() + Math.max(Math.random() * 1500, 250);
+							} 
+						} 
+						else
+						{
+							velocity.y = ySwap * 50;
+							velocity.x = 0;
+							if(y > 600 - height || y < 0)
+							{
+								ySwap *= -1;
+							}
+						}
 					break;
-				case RANDOM:
+					case BOUNCY_SQUEEK:
+					
+					break;
+					default:
 					if(FlxU.getTicks() > m_resetTime)
 					{
 						velocity.x = Math.random() - .5;
@@ -149,48 +203,28 @@ package
 						m_resetTime = FlxU.getTicks() + Math.random() * 3000;
 					}
 					break;
-				case INVADER:
-					if(FlxU.getTicks() > m_dropTime)
-					{
-						velocity.x = xSwap * 100;
-						velocity.y = 0;
-
-						if(x > 700 - WIDTH || x < 0)
-						{
-							xSwap *= -1;
-							m_dropTime = FlxU.getTicks() + Math.max(Math.random() * 1500, 250);
-						} 
-					} 
-					else
-					{
-						velocity.y = ySwap * 50;
-						velocity.x = 0;
-						if(y > 600 - HEIGHT || y < 0)
-						{
-							ySwap *= -1;
-						}
-					}
-					break;
-				case BOUNCY_SQUEEK:
-
-					break;
-				default:
-					if(FlxU.getTicks() > m_resetTime)
-					{
-						velocity.x = Math.random() - .5;
-						velocity.y = Math.random() - .5;
-						distance = Math.max(FlxU.getDistance(ZERO, velocity), Number.MIN_VALUE);
-						velocity.x =  (velocity.x / distance) * 100;
-						velocity.y = (velocity.y / distance)  * 100;
-						m_resetTime = FlxU.getTicks() + Math.random() * 3000;
-					}
-					break;
+				}
+				
 			}
-			var perpendicular:FlxPoint = new FlxPoint(velocity.y, -velocity.x);
-			angle = FlxU.getAngle(ZERO, perpendicular);
-			if(x > 700 - WIDTH)
+			else if(m_disabled)
 			{
-				x = 700 - WIDTH;
+				velocity.x *= .99;
+				velocity.y *= .99;
+			}
+			if(m_disabled && m_disableTimer < FlxU.getTicks())
+			{
+				this.framePixels.applyFilter(m_cloned, framePixels.rect, new Point(), s_resat);
+				m_disabled = false;
+			}
+			if(mode != PLAYER)
+			{
+				var perpendicular:FlxPoint = new FlxPoint(velocity.y, -velocity.x);
+				angle = FlxU.getAngle(ZERO, perpendicular);
+			}
+			
+			if(x > 700 - width)
+			{
+				x = 700 - width;
 				velocity.x *= -.5;
 				m_resetTime = 0;
 			}
@@ -200,9 +234,9 @@ package
 				velocity.x *= -.5;
 				m_resetTime = 0;
 			}
-			if(y > 600 - HEIGHT)
+			if(y > 600 - height)
 			{
-				y = 600 - HEIGHT;
+				y = 600 - height;
 				velocity.y *= -.5;
 				m_resetTime = 0;
 			}	
