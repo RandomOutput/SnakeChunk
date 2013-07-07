@@ -10,9 +10,9 @@ package
 	{
 		private const SHADOW_SPAWN_RATE:int = 15000; //in ticks
 		private const SHADOW_SPAWN_RANGE:int = 500; //in ticks
-		private const SHADOW_SPEED:int = 50;
+		private const SHADOW_SPEED:int = 30;
 		private const SHADOW_SPEED_RANGE:int = 20;
-		private const SHADOW_ROTATE_SPEED:int = 20;
+		private const SHADOW_ROTATE_SPEED:int = 15;
 		private const SHADOW_ROTATE_SPEED_RANGE:int = 10; 
 
 		private var m_background:FlxSprite;
@@ -49,7 +49,17 @@ package
 			var shadowPoint:FlxPoint = new FlxPoint();
 			var goalPoint:FlxPoint = new FlxPoint();
 			var newShadow:FlxSprite = new FlxSprite();
-			newShadow.loadGraphic(shadowImage, false, false, 257, 365);
+
+			switch(Math.floor(Math.random()*2))
+			{
+				case 0:
+					newShadow.loadGraphic(shadowImage_0, false, false, 257, 365);
+					break;
+				case 1:
+					newShadow.loadGraphic(shadowImage_1, false, false, 273, 242);
+					break;
+			}
+			
 
 			if(side == -1)//x is in bounds, y is out of bounds
 			{
@@ -87,6 +97,9 @@ package
 		private static var backgroundImage:Class;
 
 		[Embed(source="/images/shadow_001.png")]
-		private static var shadowImage:Class;
+		private static var shadowImage_0:Class;
+
+		[Embed(source="/images/shadow_002.png")]
+		private static var shadowImage_1:Class;
 	}
 }
