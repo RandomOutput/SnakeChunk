@@ -1,9 +1,9 @@
 package
 {
 	import org.flixel.FlxGroup;
+	import org.flixel.FlxPoint;
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxText;
-	import org.flixel.FlxPoint;
 	import org.flixel.FlxU;
 	
 	public class Background extends FlxGroup
@@ -18,8 +18,16 @@ package
 		private var m_background:FlxSprite;
 
 		private var m_spawnTime:int = 0;
+		private var m_chunks:Array;
+		private var m_sprite:FlxSprite;
+		
+		
+		protected var m_jitterTime:Number = 0;
+		protected var m_seedCrossLine:Number;
+		protected var m_seedBehindLine:Number;
+		protected var m_seedAheadLine:Number;
 
-		public function Background()
+		public function Background(chunks:Array)
 		{
 			super();
 			m_background = new FlxSprite();
@@ -28,9 +36,13 @@ package
 			m_background.play("shimmer");
 
 			add(m_background);
-
+			m_chunks = chunks;
+			m_sprite = new FlxSprite();
+			m_sprite.makeGraphic(700, 600, 0xFFFFFFFF);
+			add(m_sprite);
 		}
-
+		
+		
 		override public function update():void
 		{
 			super.update();
@@ -38,6 +50,23 @@ package
 			{
 				spawnShadow();
 				m_spawnTime = FlxU.getTicks() + Math.floor((Math.random()*SHADOW_SPAWN_RANGE) - SHADOW_SPAWN_RANGE/2) + SHADOW_SPAWN_RATE;
+			}
+			m_sprite.fill(0x0);
+			if(m_jitterTime < FlxU.getTicks())
+			{
+				m_seedCrossLine = Math.random();
+				m_seedBehindLine = Math.random();
+				m_seedAheadLine = Math.random();
+				m_jitterTime = FlxU.getTicks() + 100;
+			}
+			for each(var chunk:SnakeChunk in m_chunks)
+			{
+				if(chunk.ahead && chunk.behind)
+				{
+					//m_sprite.drawSketchyLine(chunk.ahead.x + chunk.ahead.origin.x, chunk.ahead.y + chunk.ahead.origin.y, chunk.behind.x  + chunk.behind.origin.x, chunk.behind.y + chunk.behind.origin.y, 0xFF000000, 1, m_seedCrossLine, 50);
+					m_sprite.drawSketchyLine(chunk.x + chunk.origin.x, chunk.y + chunk.origin.y, chunk.behind.x  + chunk.behind.origin.x, chunk.behind.y + chunk.behind.origin.y, 0xFF000000, 1, m_seedBehindLine, 50);
+					m_sprite.drawSketchyLine(chunk.ahead.x + chunk.ahead.origin.x, chunk.ahead.y + chunk.ahead.origin.y, chunk.x  + chunk.origin.x, chunk.y + chunk.origin.y, 0xFF000000, 1, m_seedAheadLine, 50);
+				}
 			}
 		}
 

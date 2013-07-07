@@ -9,7 +9,6 @@ package
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxState;
 	import org.flixel.FlxU;
-	import org.flixel.plugin.photonstorm.FlxCollision;
 	
 	public class PlayState extends FlxState
 	{	
@@ -45,7 +44,6 @@ package
 			var xSwap:int = 1;
 
 			FlxG.bgColor = 0xffffff;
-			m_background = new Background();
 			m_static = new FlxSprite();
 			m_static.loadGraphic(staticImage, true, false, 700, 600);
 			m_static.blend = 'overlay';
@@ -65,6 +63,8 @@ package
 			m_snake = head;
 			m_chunks.add(head);
 			m_overlappedLastFrame = {};
+			var chunks:Array = [];
+			chunks.push(head);
 			for(var i:int = 0; i < START_COUNT; ++i)
 			{
 				if(i % NODES_PER_ROW == 0)
@@ -80,8 +80,10 @@ package
 				head.behind = next;
 				m_chunks.add(next);
 				head = next;
+				chunks.push(head);
 			}
 			
+			m_background = new Background(chunks);
 			m_goal = new GoalZone(450, 400);
 			add(m_background);
 			add(new MousePointer());
@@ -120,8 +122,6 @@ package
 		
 		protected function overlap(chunk1:FlxObject, chunk2:FlxObject):void
 		{
-			//if(FlxCollision.pixelPerfectCheck(chunk1 as FlxSprite, chunk2 as FlxSprite))
-			//use distance based collision
 			if(FlxU.getDistance(new FlxPoint(chunk1.x, chunk1.y), new FlxPoint(chunk2.x, chunk2.y)) < COL_DIST)
 			{
 				if(chunk1 is SnakeChunk && chunk2 is SnakeChunk)
