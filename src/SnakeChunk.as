@@ -150,8 +150,8 @@ package
 							//space out node after player head
 							if(this.ahead.mode == SnakeChunk.PLAYER)
 							{
-								velocity.x = newVelocity.x * dot * .3 + velocity.x * .7 + (newVelocity.x * (distance - PlayState.SPACER_VAL + 15));
-								velocity.y = newVelocity.y * dot * .3 + velocity.y * .7 + (newVelocity.y * (distance - PlayState.SPACER_VAL + 15));
+								velocity.x = newVelocity.x * dot * .3 + velocity.x * .7 + (newVelocity.x * (distance - PlayState.SPACER_VAL + 10));
+								velocity.y = newVelocity.y * dot * .3 + velocity.y * .7 + (newVelocity.y * (distance - PlayState.SPACER_VAL + 10));
 							} 
 							else //normal
 							{
