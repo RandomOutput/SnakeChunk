@@ -567,7 +567,6 @@ package org.flixel
 			var iterations:int = distance / subdivisionLength - 1;
 			for(var i:int = 0; i < iterations; ++i)
 			{
-				
 				var perp:FlxPoint = new FlxPoint(direction.y, -direction.x);
 				randomSeed =  FlxU.srand(randomSeed);
 				var offset:Number = randomSeed * jitter* 2 - jitter;
