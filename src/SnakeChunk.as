@@ -22,7 +22,7 @@ package
 	{
 		public static const PLAYER:int = 1;
 		public static const BODY:int = 2;
-		public static const RANDOM:int = 3;
+		public static const HOMER:int = 3;
 		public static const INVADER:int = 4;
 		public static const BOUNCY_SQUEEK:int = 5;
 
@@ -43,6 +43,7 @@ package
 		private var m_resetTime:uint;
 		//for behavior
 		private var m_dropTime:uint = 0;
+		private var m_sideTime:uint = 0;
 		private var xSwap:int = 1;
 		private var ySwap:int = 1;
 		
@@ -55,6 +56,8 @@ package
 		private var m_disableTimer:uint;
 		private var m_disabled:Boolean;
 		private var m_cloned:BitmapData;
+
+		private var m_gameState:PlayState;
 		
 		private static var s_desat:ColorMatrixFilter = new ColorMatrixFilter(new Array(0.309, 0.609, 0.082, 0, 0, 0.309, 0.609, 0.082, 0, 0, 0.309, 0.609, 0.082, 0, 0, 0, 0, 0, 1, 0));
 		private static var s_resat:ColorMatrixFilter = new ColorMatrixFilter(new Array(1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0));
@@ -64,11 +67,12 @@ package
 			return ++s_nextID;
 		}
 		
-		public function SnakeChunk(X:int, Y:int, mode:int)
+		public function SnakeChunk(X:int, Y:int, mode:int, gameState:PlayState)
 		{
 			super(X, Y, null);
 			lastX = X;
 			lastY = Y;
+			m_gameState = gameState;
 			
 
 			loadGraphic(playerChunkImage, false, false, PLAYER_SIZE_X, PLAYER_SIZE_Y);
@@ -107,7 +111,7 @@ package
 			return m_disabled;
 		}
 		
-		private function turnToFace(desiredAngle, ca:Number, turnSpeed:Number):Number
+		private function turnToFace(desiredAngle:Number, ca:Number, turnSpeed:Number):Number
 		{   
 			var q1:Quaternion = Quaternion.createFromAxisAngle(0, 1, 0, FlxMath.asRadians(desiredAngle));
 			var q2:Quaternion = Quaternion.createFromAxisAngle(0, 1, 0, FlxMath.asRadians(ca));
@@ -160,15 +164,16 @@ package
 							}
 						}
 						break;
-					case RANDOM:
+					case HOMER:
 						if(FlxU.getTicks() > m_resetTime)
 						{
-							velocity.x = Math.random() - .5;
-							velocity.y = Math.random() - .5;
-							distance = Math.max(FlxU.getDistance(ZERO, velocity), Number.MIN_VALUE);
-							velocity.x =  (velocity.x / distance) * 100;
-							velocity.y = (velocity.y / distance)  * 100;
-							m_resetTime = FlxU.getTicks() + Math.random() * 3000;
+							var goal_x:int = m_gameState.m_snake.x + ((Math.random() * 200) - 100);
+							var goal_y:int = m_gameState.m_snake.y + ((Math.random() * 200) - 100);
+							velocity.x = (goal_x - x) / FlxU.getDistance(new FlxPoint(goal_x, goal_y), new FlxPoint(x,y));
+							velocity.y = (goal_y - y) / FlxU.getDistance(new FlxPoint(goal_x, goal_y), new FlxPoint(x,y));
+							velocity.x *= 80;
+							velocity.y *= 80;
+							m_resetTime = FlxU.getTicks() + Math.max(Math.random() * 4000, 2000);
 						}
 						break;
 					case INVADER:
@@ -180,22 +185,47 @@ package
 							if(x > 700 - width || x < 0)
 							{
 								xSwap *= -1;
-								m_dropTime = FlxU.getTicks() + Math.max(Math.random() * 1500, 250);
+							}
+
+							if(FlxU.getTicks() > m_sideTime)
+							{
+								xSwap *= -1;
+								m_dropTime = FlxU.getTicks() + Math.max(Math.random() * 9000, 4000);
 							} 
 						} 
 						else
 						{
-							velocity.y = ySwap * 50;
+							velocity.y = ySwap * 100;
 							velocity.x = 0;
 							if(y > 600 - height || y < 0)
 							{
 								ySwap *= -1;
 							}
+							m_sideTime = FlxU.getTicks() + Math.max(Math.random() * 9000, 4000);
 						}
 					break;
 					case BOUNCY_SQUEEK:
+						if(xSwap == 1)
+						{
+							velocity.x = Math.random() * (Math.random()>.5 ? -1 : 1);
+							velocity.y = Math.random() * (Math.random()>.5 ? -1 : 1);
+
+							velocity.x *= 100;
+							velocity.y *= 100;
+
+							xSwap = -1;
+						}
 						
-					
+						if(x > 700 - width || x < 0)
+						{
+							velocity.x *= -1;
+						}
+						if(y > 600 - height || y < 0)
+						{
+							velocity.y *= -1;
+						}	
+
+
 					break;
 					default:
 					if(FlxU.getTicks() > m_resetTime)
@@ -258,7 +288,7 @@ package
 			return m_lastVelocity;
 		}
 		
-		public function setBreakType(type:int = RANDOM):void
+		public function setBreakType(type:int = HOMER):void
 		{
 			m_type = type;
 
