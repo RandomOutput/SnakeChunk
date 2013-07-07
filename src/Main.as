@@ -10,6 +10,7 @@ package
 		public function Main()
 		{
 			super(700,600,PlayState,1);
+			//FlxG.visualDebug = true;
 		}
 		
 	}

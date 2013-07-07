@@ -300,13 +300,12 @@ package
 			if(m_ahead)
 			{
 				m_mode = m_type;
-				chunk(nextID, int(Math.random() + .5) + 2);
+				setChainID(nextID);
+				//chunk(nextID, int(Math.random() + .5) + 2);
 				m_ahead.m_behind = null;
 				m_ahead = null;
 			}
 		}
-
-
 
 		//*** Assets ***
 		[Embed(source="/images/chunk_pink.png")]
