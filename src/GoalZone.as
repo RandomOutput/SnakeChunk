@@ -9,7 +9,7 @@ package
 		public function GoalZone(X:Number=0, Y:Number=0)
 		{
 			super(X, Y, null);
-			loadGraphic(goalZoneImage, false, false, 88, 88);
+			loadGraphic(goalZoneImage, false, false, 97, 97);
 			addAnimation("stage4", [0,1,2,3], 10, true);
 			addAnimation("stage3", [4,5,6,7], 10, true);
 			addAnimation("stage2", [8,9,10,11], 10, true);
