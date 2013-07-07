@@ -5,9 +5,9 @@ package
 	import org.flixel.FlxG;
 	import org.flixel.FlxGroup;
 	import org.flixel.FlxObject;
+	import org.flixel.FlxPoint;
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxState;
-	import org.flixel.FlxPoint;
 	import org.flixel.FlxU;
 	import org.flixel.plugin.photonstorm.FlxCollision;
 	
@@ -73,6 +73,7 @@ package
 			
 			m_goal = new GoalZone(450, 400);
 			add(m_background);
+			add(new MousePointer());
 			add(m_goal);
 			add(m_chunks);
 			add(m_timer);
@@ -141,7 +142,7 @@ package
 						}
 						else
 						{
-							if(getStartOf(snake1).mode == SnakeChunk.PLAYER || getStartOf(snake2).mode == SnakeChunk.PLAYER)
+							if((getStartOf(snake1).mode == SnakeChunk.PLAYER || getStartOf(snake2).mode == SnakeChunk.PLAYER) && !(snake1.isDisabled() || snake2.isDisabled()))
 							{
 								if(snake2.ahead == null && snake2.mode != SnakeChunk.BODY && snake2.mode != SnakeChunk.PLAYER && !m_splitOnceThisCollision)
 								{
@@ -166,16 +167,12 @@ package
 
 		public function swapPlayer(snake1:SnakeChunk, snake2:SnakeChunk):void
 		{
-			trace("\n\nSWAP PLAYER");
-			trace("Snake1 len:     " + getChainLength(snake1));
-			trace("Snake2 len:     " + getChainLength(snake2));
-			trace("player.chainID:   " + m_snake.chainID);
-			trace("snake1.chainID: " + snake1.chainID);
-			trace("snake2.chainID: " + snake2.chainID);
+			var splitOffChunk:SnakeChunk = snake1.chainID != m_snake.chainID ? snake1 : snake2.chainID != m_snake.chainID ? snake2 : null;
 			if(getChainLength(snake1) > getChainLength(snake2) && m_snake.chainID != snake1.chainID)
 			{
 				trace("swap for 1");
 				var snake1Head:SnakeChunk = getStartOf(snake1);
+				splitOffChunk = m_snake.behind;
 				m_snake.behind.split(); //disconnect player from chain
 				m_snake.behind = snake1Head; //connect head to new chain
 				snake1Head.ahead = m_snake; //connnect new chain to head
@@ -184,10 +181,13 @@ package
 			{
 				trace("swap for 2");
 				var snake2Head:SnakeChunk = getStartOf(snake2);
+				splitOffChunk = m_snake.behind;
 				m_snake.behind.split(); //disconnect player from chain
 				m_snake.behind = snake2Head; //connect head to new chain
 				snake2Head.ahead = m_snake; //connnect new chain to head
 			}
+			splitOffChunk = getStartOf(splitOffChunk);
+			splitOffChunk.disable();
 		}
 		/*
 		public function destroyNode(dead_node:SnakeChunk):void
