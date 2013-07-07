@@ -184,7 +184,7 @@ package
 			var splitOffChunk:SnakeChunk = snake1.chainID != m_snake.chainID ? snake1 : snake2.chainID != m_snake.chainID ? snake2 : null;
 			if(getChainLength(snake1) > getChainLength(snake2) && m_snake.chainID != snake1.chainID)
 			{
-				trace("swap for 1");
+				//trace("swap for 1");
 				var snake1Head:SnakeChunk = getStartOf(snake1);
 				splitOffChunk = m_snake.behind;
 				m_snake.behind.split(); //disconnect player from chain
@@ -193,7 +193,7 @@ package
 			}
 			else if(getChainLength(snake1) <= getChainLength(snake2) && m_snake.chainID != snake2.chainID)
 			{
-				trace("swap for 2");
+				//trace("swap for 2");
 				var snake2Head:SnakeChunk = getStartOf(snake2);
 				splitOffChunk = m_snake.behind;
 				m_snake.behind.split(); //disconnect player from chain

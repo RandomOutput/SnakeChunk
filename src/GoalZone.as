@@ -20,7 +20,7 @@ package
 		
 		public function checkSnake(snake:SnakeChunk):Boolean
 		{
-			trace("GO");
+			//trace("GO");
 			if(!snake)
 			{
 				return false;
