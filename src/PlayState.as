@@ -32,7 +32,7 @@ package
 		private var m_goal:GoalZone;
 		private var m_splitOnceThisCollision:Boolean;
 		private var m_splitID:String;
-		private var player:SnakeChunk;
+		//private var player:SnakeChunk;
 		
 		public function PlayState()
 		{
@@ -49,7 +49,7 @@ package
 			m_timer = new GameTimer(20, 20, START_TIME);
 			m_chunks = new FlxGroup();
 			var head:SnakeChunk = new SnakeChunk(START_X, START_Y, SnakeChunk.PLAYER);
-			player = head;
+			//player = head;
 			var last_pos:FlxPoint = new FlxPoint(START_X, START_Y);
 			m_snake = head;
 			m_chunks.add(head);
@@ -169,24 +169,24 @@ package
 			trace("\n\nSWAP PLAYER");
 			trace("Snake1 len:     " + getChainLength(snake1));
 			trace("Snake2 len:     " + getChainLength(snake2));
-			trace("player.chainID:   " + player.chainID);
+			trace("player.chainID:   " + m_snake.chainID);
 			trace("snake1.chainID: " + snake1.chainID);
 			trace("snake2.chainID: " + snake2.chainID);
-			if(getChainLength(snake1) > getChainLength(snake2) && player.chainID != snake1.chainID)
+			if(getChainLength(snake1) > getChainLength(snake2) && m_snake.chainID != snake1.chainID)
 			{
 				trace("swap for 1");
 				var snake1Head:SnakeChunk = getStartOf(snake1);
-				player.behind.split(); //disconnect player from chain
-				player.behind = snake1Head; //connect head to new chain
-				snake1Head.ahead = player; //connnect new chain to head
+				m_snake.behind.split(); //disconnect player from chain
+				m_snake.behind = snake1Head; //connect head to new chain
+				snake1Head.ahead = m_snake; //connnect new chain to head
 			}
-			else if(getChainLength(snake1) <= getChainLength(snake2) && player.chainID != snake2.chainID)
+			else if(getChainLength(snake1) <= getChainLength(snake2) && m_snake.chainID != snake2.chainID)
 			{
 				trace("swap for 2");
 				var snake2Head:SnakeChunk = getStartOf(snake2);
-				player.behind.split(); //disconnect player from chain
-				player.behind = snake2Head; //connect head to new chain
-				snake2Head.ahead = player; //connnect new chain to head
+				m_snake.behind.split(); //disconnect player from chain
+				m_snake.behind = snake2Head; //connect head to new chain
+				snake2Head.ahead = m_snake; //connnect new chain to head
 			}
 		}
 		/*
