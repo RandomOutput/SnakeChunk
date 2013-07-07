@@ -14,7 +14,7 @@ package
 	
 	public class PlayState extends FlxState
 	{	
-		public static const START_COUNT:int = 18;
+		public static const START_COUNT:int = 20;
 		public static const SPACER_VAL:int = 30;
 		public static const COL_DIST:int = 20;
 		public static const SPEED:Number = 100;
