@@ -1,13 +1,12 @@
 package
-{
-	import flash.utils.Dictionary;
-	
+{	
 	import org.flixel.FlxEmitter;
 	import org.flixel.FlxG;
 	import org.flixel.FlxGroup;
 	import org.flixel.FlxObject;
 	import org.flixel.FlxParticle;
 	import org.flixel.FlxPoint;
+	import org.flixel.FlxSound;
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxState;
 	import org.flixel.FlxU;
@@ -21,7 +20,15 @@ package
 		public static const NODES_PER_ROW:int = 7;
 		public static const START_X:int = 500;
 		public static const START_Y:int = 200;
-		public static const START_TIME:int = 100;
+		public static const START_TIME:int = 90;
+		
+		
+		public static const T1_MIX_VOLUME:Number = 1;
+		public static const T2_MIX_VOLUME:Number = .6;
+		public static const T3_MIX_VOLUME:Number = 1;
+		public static const T4_MIX_VOLUME:Number = 1;
+		public static const T5_MIX_VOLUME:Number = 1;
+		
 		public var m_snake:SnakeChunk;
 
 		private var m_background:FlxGroup;
@@ -35,7 +42,14 @@ package
 		private var m_splitID:String;
 		private var m_static:FlxSprite;
 		private var m_sepia:FlxSprite;
-		private var m_explosion:FlxEmitter
+		private var m_explosion:FlxEmitter;
+		
+		private var m_t1:FlxSound;
+		private var m_t2:FlxSound;
+		private var m_t3:FlxSound;
+		private var m_t4:FlxSound;
+		private var m_t5:FlxSound;
+		
 		
 		public function PlayState()
 		{
@@ -115,14 +129,25 @@ package
 			add(m_chunks);
 			add(m_timer);
 			add(m_sepia);
-			
-			
-			
+			m_t1 = FlxG.play(T1, T1_MIX_VOLUME, false);
+			m_t2 = FlxG.play(T2, 0, false);
+			m_t3 = FlxG.play(T3, 0, false);
+			m_t4 = FlxG.play(T4, 0, false);
+			m_t5 = FlxG.play(T5, 0, false);
 		}
 		
 		override public function update():void
 		{
 			super.update();
+			
+			var percent:Number = (getChainLength(m_snake) - 2) / ((START_COUNT - 2) * 1.0);
+			
+			m_t2.volume = FlxU.bound(((1 - percent) - .1) * 4, 0, 1) * T2_MIX_VOLUME;
+			m_t3.volume = FlxU.bound(((1 - percent) - .5) * 4, 0, 1) * T3_MIX_VOLUME;
+			m_t4.volume = FlxU.bound(((1 - percent) - .6) * 4, 0, 1) * T4_MIX_VOLUME;
+			m_t5.volume = FlxU.bound(((1 - percent) - .75) * 4, 0, 1) * T5_MIX_VOLUME;
+			
+			
 			m_goal.checkSnake(m_snake)
 			FlxG.bgColor = 0xffffff;
 			m_overlappedThisFrame = {};
@@ -316,6 +341,24 @@ package
 
 		[Embed(source="/images/sepia.png")]
 		private static var sepiaImage:Class;
+		
+		[Embed(source="/sounds/Eccentricity-T1-Piano.mp3")] 	
+		private static var T1:Class;
+		
+		[Embed(source="/sounds/Eccentricity  game-T2-bells.mp3")] 	
+		private static var T2:Class;
+		
+		[Embed(source="/sounds/Eccentricity  game-T3-backPiano.mp3")] 	
+		private static var T3:Class;
+		
+		[Embed(source="/sounds/Eccentricity  game-T4-perc1.mp3")] 	
+		private static var T4:Class;
+		
+		[Embed(source="/sounds/Eccentricity  game-T5-perc2.mp3")] 	
+		private static var T5:Class;
+		
+		//private static var Music
+		
 		
 	}
 	
