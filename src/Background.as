@@ -62,17 +62,15 @@ package
 			}
 			for each(var chunk:SnakeChunk in m_chunks)
 			{
-				if(chunk.ahead && chunk.behind)
+				if(chunk.ahead)
 				{
 					if(chunk.ahead.isDisabled() || chunk.isDisabled())
 					{
 						lineColor = 0x55000000;
 					}else
 					{
-						lineColor = 0x99ee4036
+						lineColor = 0x99ee4036;
 					}
-					//m_sprite.drawSketchyLine(chunk.ahead.x + chunk.ahead.origin.x, chunk.ahead.y + chunk.ahead.origin.y, chunk.behind.x  + chunk.behind.origin.x, chunk.behind.y + chunk.behind.origin.y, 0xFF000000, 1, m_seedCrossLine, 50);
-					//m_sprite.drawSketchyLine(chunk.x + chunk.origin.x, chunk.y + chunk.origin.y, chunk.behind.x  + chunk.behind.origin.x, chunk.behind.y + chunk.behind.origin.y, 0xFF000000, 1, m_seedBehindLine, 50);
 					m_sprite.drawSketchyLine(chunk.ahead.x + chunk.ahead.origin.x, chunk.ahead.y + chunk.ahead.origin.y, chunk.x  + chunk.origin.x, chunk.y + chunk.origin.y, lineColor, 1, m_seedAheadLine, 50, 3);
 				}
 			}
