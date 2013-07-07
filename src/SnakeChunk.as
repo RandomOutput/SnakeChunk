@@ -74,6 +74,11 @@ package
 			loadGraphic(playerChunkImage, false, false, PLAYER_SIZE_X, PLAYER_SIZE_Y);
 			WIDTH = PLAYER_SIZE_X;
 			HEIGHT = PLAYER_SIZE_Y;
+			
+			if(mode == PLAYER)
+			{
+				origin = new FlxPoint(width * .1, height / 2); 
+			}
 
 			m_mode = mode;
 			if(m_mode != BODY)
@@ -145,8 +150,8 @@ package
 							//space out node after player head
 							if(this.ahead.mode == SnakeChunk.PLAYER)
 							{
-								velocity.x = newVelocity.x * dot * .3 + velocity.x * .7 + (newVelocity.x * (distance - PlayState.SPACER_VAL - 25));
-								velocity.y = newVelocity.y * dot * .3 + velocity.y * .7 + (newVelocity.y * (distance - PlayState.SPACER_VAL - 25));
+								velocity.x = newVelocity.x * dot * .3 + velocity.x * .7 + (newVelocity.x * (distance - PlayState.SPACER_VAL + 15));
+								velocity.y = newVelocity.y * dot * .3 + velocity.y * .7 + (newVelocity.y * (distance - PlayState.SPACER_VAL + 15));
 							} 
 							else //normal
 							{
@@ -224,25 +229,25 @@ package
 			if(x > 700 - width)
 			{
 				x = 700 - width;
-				velocity.x *= -.5;
+				velocity.x = velocity.x > 0 ? velocity.x * -.5 : velocity.x;
 				m_resetTime = 0;
 			}
 			if(x < 0)
 			{
 				x = 0;
-				velocity.x *= -.5;
+				velocity.x = velocity.x < 0 ? velocity.x * -.5 : velocity.x;
 				m_resetTime = 0;
 			}
 			if(y > 600 - height)
 			{
 				y = 600 - height;
-				velocity.y *= -.5;
+				velocity.y = velocity.y > 0 ? velocity.y * -.5 : velocity.y;
 				m_resetTime = 0;
 			}	
 			if(y < 0)
 			{
 				y = 0;
-				velocity.y *= -.5;
+				velocity.y = velocity.y < 0 ? velocity.y * -.5 : velocity.y;
 				m_resetTime = 0;
 			}	
 		}
