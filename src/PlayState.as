@@ -87,12 +87,12 @@ package
 			}
 			
 			
-			m_explosion = new FlxEmitter(10, FlxG.height / 2, 200);
+			m_explosion = new FlxEmitter(10, FlxG.height / 2, 250);
 			m_explosion.setXSpeed(-500, 500);
 			m_explosion.setYSpeed( -500, 500);
 			
 			
-			for (var i:int = 0; i < m_explosion.maxSize/2; i++) {
+			for (var j:int = 0; j < m_explosion.maxSize/2; j++) {
 				var whitePixel:FlxParticle = new FlxParticle();
 				whitePixel.makeGraphic(3, 3, 0x55000000);
 				whitePixel.visible = false; //Make sure the particle doesn't show up at (0, 0)
@@ -105,7 +105,7 @@ package
 			
 			
 			m_background = new Background(chunks);
-			m_goal = new GoalZone(450, 400);
+			m_goal = new GoalZone(Math.random() * 300 + 150, Math.random() * 200 + 200);
 			add(m_background);
 			add(new MousePointer());
 			add(m_static);
