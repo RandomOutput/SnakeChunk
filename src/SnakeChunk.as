@@ -262,7 +262,7 @@ package
 		{
 			m_type = type;
 
-			trace("MODE: " + type);
+			//trace("MODE: " + type);
 			
 			switch(type)
 			{
