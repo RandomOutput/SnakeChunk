@@ -151,7 +151,7 @@ package
 				case INVADER:
 					if(FlxU.getTicks() > m_dropTime)
 					{
-						velocity.x = xSwap * 200;
+						velocity.x = xSwap * 100;
 						velocity.y = 0;
 
 						if(x > 700 - WIDTH || x < 0)
@@ -162,7 +162,7 @@ package
 					} 
 					else
 					{
-						velocity.y = ySwap * 100;
+						velocity.y = ySwap * 50;
 						velocity.x = 0;
 						if(y > 600 - HEIGHT || y < 0)
 						{
@@ -341,6 +341,8 @@ package
 				m_ahead = null;
 			}
 		}
+
+
 
 		//*** Assets ***
 		[Embed(source="/images/chunk_pink.png")]

@@ -13,10 +13,10 @@ package
 	
 	public class PlayState extends FlxState
 	{	
-		public static const START_COUNT:int = 25;
+		public static const START_COUNT:int = 40;
 		public static const SPACER_VAL:int = 30;
 		public static const COL_DIST:int = 15;
-		public static const SPEED:Number = 100;
+		public static const SPEED:Number = 70;
 		public static const NODES_PER_ROW:int = 10;
 		public static const START_X:int = 600;
 		public static const START_Y:int = 100;
@@ -153,7 +153,27 @@ package
 							}*/
 							if(getStartOf(snake1).mode == SnakeChunk.PLAYER || getStartOf(snake2).mode == SnakeChunk.PLAYER)
 							{
-								if(snake2.ahead == null && snake2.mode != SnakeChunk.BODY && snake2.mode != SnakeChunk.PLAYER && !m_splitOnceThisCollision)
+								trace("----player on other hit " + FlxU.getTicks());
+								trace("-------snake2.ahead:    " + snake2.ahead);
+								trace("-------s2 mode player?: " + (snake2.mode == SnakeChunk.PLAYER));
+								trace("-------snake2 split:    " + m_splitOnceThisCollision + "\n");
+								trace("-------snake1.ahead:    " + snake1.ahead);
+								trace("-------s1 mode player?: " + (snake1.mode == SnakeChunk.PLAYER));
+								trace("-------snake1 split:    " + m_splitOnceThisCollision + "\n\n");
+								//if snake2 is player head
+								
+								if(snake2.ahead == null && snake2.mode == SnakeChunk.PLAYER && !m_splitOnceThisCollision)
+								{
+									trace("det 1");
+									destroyNode(snake1);
+								}
+								//if snake1 is the player head
+								else if(snake1.ahead == null && snake1.mode == SnakeChunk.PLAYER && !m_splitOnceThisCollision)
+								{
+									trace("det 2");
+									destroyNode(snake2);
+								}
+								else if(snake2.ahead == null && snake2.mode != SnakeChunk.BODY && snake2.mode != SnakeChunk.PLAYER && !m_splitOnceThisCollision)
 								{
 									var tail:SnakeChunk = getEndOf(snake1);
 									snake2.ahead = tail;
@@ -171,6 +191,36 @@ package
 					}
 					m_overlappedThisFrame[key] = true;
 				}
+			}
+		}
+
+		public function destroyNode(dead_node:SnakeChunk):void
+		{
+			trace("DET GO");
+			if(!dead_node.ahead) //if it is a head
+			{
+				if(dead_node.behind) //if it has a tail
+				{
+					dead_node.behind.split(); //split from the tail
+				}
+				//dead_node.destroy(); //remove the node
+				m_chunks.remove(dead_node); 
+				dead_node = null;
+			}
+			else if(!dead_node.behind) //if it is a tail
+			{
+				dead_node.split(); //remove it from the chain
+				//dead_node.destroy(); //remove the node
+				m_chunks.remove(dead_node);
+				dead_node = null;
+			}
+			else //if it is in the body
+			{
+				dead_node.split(); //remove it from the chain ahead
+				dead_node.behind.split(); //remove it from the chain behind
+				//dead_node.destroy(); //remove the node
+				m_chunks.remove(dead_node);
+				dead_node = null;
 			}
 		}
 
