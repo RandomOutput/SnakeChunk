@@ -26,7 +26,7 @@ package
 			for(var i:int = 0; i < 32 && i < m_lastPoints.length; ++i)
 			{
 				var p:FlxPoint = m_lastPoints[m_lastPoints.length - i - 1];
-				m_sprite.drawLine(p.x, p.y, FlxG.mouse.screenX, FlxG.mouse.screenY, (int(255 * (32 - i) / 32) << 24) | 0x000000);
+				m_sprite.drawLine(p.x, p.y, FlxG.mouse.screenX, FlxG.mouse.screenY, (int(255 * (32 - i) / 32) << 24) | 0xf43139);
 			}
 			m_lastPoints.push(new FlxPoint(FlxG.mouse.screenX, FlxG.mouse.screenY));
 			if(m_lastPoints.length > 32)

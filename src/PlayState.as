@@ -87,16 +87,17 @@ package
 			m_goal = new GoalZone(450, 400);
 			add(m_background);
 			add(new MousePointer());
+			add(m_static);
 			add(m_goal);
 			add(m_chunks);
 			add(m_timer);
-			add(m_static);
 			add(m_sepia);
 		}
 		
 		override public function update():void
 		{
 			super.update();
+			m_goal.checkSnake(m_snake)
 			FlxG.bgColor = 0xffffff;
 			m_overlappedThisFrame = {};
 			m_splitOnceThisCollision = m_splitID != null && m_overlappedLastFrame[m_splitID];
