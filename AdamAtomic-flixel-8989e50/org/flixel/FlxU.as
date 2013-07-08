@@ -186,7 +186,22 @@ package org.flixel
 		 */
 		static public function getTicks():uint
 		{
-			return getTimer();
+			return getTimer() - pausedTime;
+		}
+		
+		static public function setPauseStop():void
+		{
+			if(pauseStarted > -1)
+			{
+				pausedTime += (getTimer() - pauseStarted);
+			}
+		}
+		protected static var pauseStarted:int = -1;
+		protected static var pausedTime:uint = 0;
+		
+		static public function setPauseStart():void
+		{
+			pauseStarted = getTimer();
 		}
 		
 		/**

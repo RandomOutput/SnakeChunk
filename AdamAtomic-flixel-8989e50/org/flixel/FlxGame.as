@@ -6,7 +6,9 @@ package org.flixel
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
-	import flash.events.*;
+	import flash.events.Event;
+	import flash.events.KeyboardEvent;
+	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.text.AntiAliasType;
 	import flash.text.GridFitType;
@@ -402,6 +404,7 @@ package org.flixel
 			_lostFocus = _focus.visible = false;
 			stage.frameRate = _flashFramerate;
 			FlxG.resumeSounds();
+			FlxU.setPauseStop();
 		}
 		
 		/**
@@ -420,6 +423,7 @@ package org.flixel
 			_lostFocus = _focus.visible = true;
 			stage.frameRate = 10;
 			FlxG.pauseSounds();
+			FlxU.setPauseStart();
 		}
 		
 		/**
