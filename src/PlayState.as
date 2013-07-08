@@ -23,6 +23,7 @@ package
 		public static const START_TIME:int = 90;
 		
 		
+		public static const T0_MIX_VOLUME:Number = .8;
 		public static const T1_MIX_VOLUME:Number = 1;
 		public static const T2_MIX_VOLUME:Number = .6;
 		public static const T3_MIX_VOLUME:Number = 1;
@@ -44,12 +45,16 @@ package
 		private var m_sepia:FlxSprite;
 		private var m_explosion:FlxEmitter;
 		
+		
+		private var m_t0:FlxSound;
 		private var m_t1:FlxSound;
 		private var m_t2:FlxSound;
 		private var m_t3:FlxSound;
 		private var m_t4:FlxSound;
 		private var m_t5:FlxSound;
 		
+		private var m_chunkSound:FlxSound;
+		private var m_combineSound:FlxSound;
 		
 		public function PlayState()
 		{
@@ -129,11 +134,20 @@ package
 			add(m_chunks);
 			add(m_timer);
 			add(m_sepia);
+			m_t1 = FlxG.play(T0, T0_MIX_VOLUME, false);
 			m_t1 = FlxG.play(T1, T1_MIX_VOLUME, false);
 			m_t2 = FlxG.play(T2, 0, false);
 			m_t3 = FlxG.play(T3, 0, false);
 			m_t4 = FlxG.play(T4, 0, false);
 			m_t5 = FlxG.play(T5, 0, false);
+			
+			m_chunkSound = new FlxSound();
+			m_chunkSound.loadEmbedded(CHUNK, false, false);
+			m_chunkSound.volume = .5;
+			
+			m_combineSound = new FlxSound();
+			m_combineSound.loadEmbedded(CHUNK, false, false);
+			m_combineSound.volume = .5;
 		}
 		
 		override public function update():void
@@ -214,12 +228,14 @@ package
 									var tail:SnakeChunk = getEndOf(snake1);
 									snake2.ahead = tail;
 									tail.behind = snake2;
+									m_combineSound.play(false);
 								}
 								else if(snake1.ahead == null && snake1.mode != SnakeChunk.BODY && snake1.mode != SnakeChunk.PLAYER && !m_splitOnceThisCollision)
 								{	
 									tail = getEndOf(snake2);
 									snake1.ahead = tail;
 									tail.behind = snake1;
+									m_combineSound.play(false);
 								}
 							}
 								
@@ -256,7 +272,7 @@ package
 			m_explosion.x = splitOffChunk.x + splitOffChunk.origin.x;
 			m_explosion.y = splitOffChunk.y + splitOffChunk.origin.y;
 			m_explosion.start(true, 1, 0.1, 50);
-			
+			m_chunkSound.play(false);
 		}
 		/*
 		public function destroyNode(dead_node:SnakeChunk):void
@@ -342,6 +358,9 @@ package
 		[Embed(source="/images/sepia.png")]
 		private static var sepiaImage:Class;
 		
+		[Embed(source="/sounds/Eccentricity  game-T0-openBell.mp3")]	
+		private static var T0:Class;
+		
 		[Embed(source="/sounds/Eccentricity-T1-Piano.mp3")] 	
 		private static var T1:Class;
 		
@@ -357,7 +376,12 @@ package
 		[Embed(source="/sounds/Eccentricity  game-T5-perc2.mp3")] 	
 		private static var T5:Class;
 		
-		//private static var Music
+		
+		[Embed(source="/sounds/chunk.mp3")] 	
+		private static var CHUNK:Class;
+		
+		[Embed(source="/sounds/combine.mp3")] 	
+		private static var COMBINE:Class;
 		
 		
 	}
