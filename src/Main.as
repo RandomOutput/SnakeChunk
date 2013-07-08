@@ -10,7 +10,7 @@ package
 	{
 		public function Main()
 		{
-			super(700,600,PlayState,1);
+			super(700,600,MenuState,1);
 			stage.quality = StageQuality.LOW;
 		}
 		
