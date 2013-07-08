@@ -61,7 +61,7 @@ package
 			add(m_foreground);
 			add(m_sepia);
 
-			m_t1 = FlxG.play(T1, T1_MIX_VOLUME, false);
+			m_t1 = FlxG.play(T1, T1_MIX_VOLUME, true);
 		}
 		
 		override public function update():void
@@ -79,20 +79,8 @@ package
 		[Embed(source="/images/menuForeground.png")]
 		private static var menuForegroundImage:Class;
 		
-		[Embed(source="/sounds/Eccentricity-T1-Piano.mp3")] 	
+		[Embed(source="/sounds/menuLoop.mp3")] 	
 		private static var T1:Class;
-		
-		[Embed(source="/sounds/Eccentricity  game-T2-bells.mp3")] 	
-		private static var T2:Class;
-		
-		[Embed(source="/sounds/Eccentricity  game-T3-backPiano.mp3")] 	
-		private static var T3:Class;
-		
-		[Embed(source="/sounds/Eccentricity  game-T4-perc1.mp3")] 	
-		private static var T4:Class;
-		
-		[Embed(source="/sounds/Eccentricity  game-T5-perc2.mp3")] 	
-		private static var T5:Class;
 		
 		//private static var Music
 		

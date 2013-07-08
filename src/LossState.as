@@ -67,6 +67,7 @@ package
 
 			if(FlxU.getTicks() >= swapTime)
 			{
+				
 				FlxG.switchState(new MenuState());
 			}
 		}
@@ -80,7 +81,7 @@ package
 		[Embed(source="/images/sepia.png")]
 		private static var sepiaImage:Class;
 
-		[Embed(source="/sounds/Eccentricity-T1-Piano.mp3")] 	
+		[Embed(source="/sounds/lose.mp3")] 	
 		private static var T1:Class;
 
 
