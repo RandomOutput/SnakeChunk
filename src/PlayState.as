@@ -125,7 +125,7 @@ package
 			
 			
 			m_background = new Background(chunks);
-			m_goal = new GoalZone(Math.random() * 300 + 150, Math.random() * 200 + 200);
+			m_goal = new GoalZone(289, 450);
 			add(m_background);
 			add(new MousePointer());
 			add(m_goal);
