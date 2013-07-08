@@ -34,6 +34,8 @@ package
 		
 		override public function create():void
 		{
+			m_t1 = FlxG.play(T1, T1_MIX_VOLUME, false);
+			
 			FlxG.bgColor = 0xffffff;
 			m_static = new FlxSprite();
 			m_static.loadGraphic(staticImage, true, false, 700, 600);
@@ -58,7 +60,6 @@ package
 			add(m_foreground);
 			add(m_sepia);
 
-			m_t1 = FlxG.play(T1, T1_MIX_VOLUME, false);
 		}
 		
 		override public function update():void
