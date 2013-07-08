@@ -15,7 +15,8 @@ package
 		protected var m_fullSound:FlxSound;
 		
 		protected var m_gracePeriod:uint;
-		
+		protected var m_volTween:Number;
+		protected var m_state:String;
 		
 		public function GoalZone(X:Number=0, Y:Number=0)
 		{
@@ -27,6 +28,7 @@ package
 			addAnimation("stage1", [12,13,14,15], 10, true);
 
 			play("stage3");
+			m_state = "stage3";
 			m_partialSound = FlxG.play(partialSound, 0, true);
 			m_halfSound = FlxG.play(halfSound, 0, true);
 			m_fullSound = FlxG.play(fullSound, 0, true);
@@ -68,40 +70,64 @@ package
 				tail = tail.behind;
 				count++;
 			}
+			
+			m_volTween = Math.min(1, m_volTween + 0.01);
 
 			if(count == count_in)
 			{
+				
 				play("stage4");
-				m_partialSound.volume = 0;
-				m_halfSound.volume = 0;
-				m_fullSound.volume = 1;
+				if(m_state != "stage4")
+				{
+					m_volTween = 0;
+				}
+				m_state = "stage4";
+				m_partialSound.volume = Math.min(m_partialSound.volume, (1-m_volTween));
+				m_halfSound.volume = Math.min(m_halfSound.volume, (1-m_volTween));
+				m_fullSound.volume = m_volTween;
 				m_gracePeriod = 250;
 				return true;
 			}
 			else if(count_in / count >= .5)
 			{
 				play("stage3");
-				m_partialSound.volume = 0;
-				m_halfSound.volume = 1;
-				m_fullSound.volume = 0;
+				if(m_state != "stage3")
+				{
+					m_volTween = 0;
+				}
+				m_state = "stage3";
+				m_partialSound.volume = Math.min(m_partialSound.volume, (1-m_volTween));
+				m_halfSound.volume = m_volTween;
+				m_fullSound.volume = Math.min(m_fullSound.volume, (1-m_volTween));
 			}
 			else if(count_in > 0)
 			{
 				play("stage2");
-				m_partialSound.volume = 1;
-				m_halfSound.volume = 0;
-				m_fullSound.volume = 0;
+				if(m_state != "stage2")
+				{
+					m_volTween = 0;	
+				}
+				m_state = "stage2";
+				m_partialSound.volume = m_volTween;
+				m_halfSound.volume = Math.min(m_halfSound.volume, (1-m_volTween));
+				m_fullSound.volume = Math.min(m_fullSound.volume, (1-m_volTween));
 			}
 			else
 			{
 				play("stage1");
-				m_partialSound.volume = 0;
-				m_halfSound.volume = 0;
-				m_fullSound.volume = 0;
+				if(m_state != "stage1")
+				{
+					m_volTween = 0;
+				}
+				m_state = "stage1";
+				m_partialSound.volume = Math.min(m_partialSound.volume, (1-m_volTween));
+				m_halfSound.volume = Math.min(m_halfSound.volume, (1-m_volTween));
+				m_fullSound.volume = Math.min(m_fullSound.volume, (1-m_volTween));
 			}
-
+			
 			return false;
 		}
+		
 
 		//*** Assets ***
 		[Embed(source="/images/goal_strip_small.png")]
