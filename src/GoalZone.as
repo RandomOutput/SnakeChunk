@@ -1,7 +1,6 @@
 package
 {
 	import org.flixel.FlxG;
-	import org.flixel.FlxPoint;
 	import org.flixel.FlxSound;
 	import org.flixel.FlxSprite;
 	import org.flixel.FlxU;
@@ -133,7 +132,12 @@ package
 		[Embed(source="/images/goal_strip_small.png")]
 		private static var goalZoneImage:Class;
 		
-		
+		[Embed(source="/sounds/goalTone-Partial.mp3")]	
+		private static var partialSound:Class;	
+		[Embed(source="/sounds/goalTone-Half.mp3")]	
+		private static var halfSound:Class;	
+		[Embed(source="/sounds/goalTone-Full.mp3")]	
+		private static var fullSound:Class;
 
 	}
 
